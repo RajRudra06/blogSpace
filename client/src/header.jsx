@@ -28,7 +28,7 @@ export default function Header(){
     window.location.reload();    
   }
 
-  console.log("from header:::::", userInfo)
+  console.log("from renderer:::::", userInfo)
 
   const username=userInfo?.username
 

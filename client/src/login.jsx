@@ -30,6 +30,7 @@ export default function Login(){
                 setUserInfo(msgBackend); // Use msgBackend directly
                 alert('Login Successful !!!');
                 setRedirect(true);
+                console.log("renderer::::",userInfo)
             } else {
                 alert('Login Unsuccessful, check your details - ' + msgBackend.msg);
             }
