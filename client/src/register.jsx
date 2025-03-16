@@ -3,6 +3,8 @@ import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
 import { useState } from "react"
 import { data } from "react-router-dom"
 
+const API_URL=import.meta.env.VITE_API_URL;
+
 export default function Register(){
     const [username,setUsername]=useState('')
     const [password,setPassword]=useState('')
@@ -27,7 +29,7 @@ export default function Register(){
         else{
 
             if(password==confirmPassword){ try {
-                const res=await fetch("http://localhost:3000/register",{
+                const res=await fetch(`${API_URL}/register`,{
                 method:'POST',
                 body:JSON.stringify({username,password,firstName,lastName,email}),
                 headers:{'Content-Type':'application/json'}

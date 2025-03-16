@@ -18,8 +18,6 @@ import AuthorPage from './authorPage'
 
 "After git push"
 
-
-
 function App() {
 
   return (

@@ -7,6 +7,7 @@ import { Link, useParams } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import { useContext } from "react"
 import { PostContext } from "../postContext";
+const API_URL=import.meta.env.VITE_API_URL;
 
 export default function SinglePostPage(){
     const [postInfo,setPostInfo]=useState(null);
@@ -18,7 +19,7 @@ export default function SinglePostPage(){
 
     //runs when component mounts
     useEffect(()=>{
-            fetch(`http://localhost:3000/post/${id}`)
+            fetch(`${API_URL}/post/${id}`)
             .then(response=>{
                 response.json().then(postInfo=>{
                     setPostInfo(postInfo);
@@ -67,7 +68,7 @@ export default function SinglePostPage(){
         {userInfo?.username === postInfo?.author?<Link to="/create" ><button onClick={setPostContext} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px'}}>🖌️ Edit this post</button></Link>:null}
        
         <div  className="imagePost" >
-            <img src={`http://localhost:3000/${postInfo.cover}`} alt="" />
+            <img src={`${API_URL}/${postInfo.cover}`} alt="" />
         </div>
 
         <div 

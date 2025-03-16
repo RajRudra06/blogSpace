@@ -3,6 +3,9 @@ import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
 import { useContext, useEffect, useState } from "react"
 import { UserContext } from "./UserContext"
 import { Navigate } from "react-router-dom";
+
+const API_URL=import.meta.env.VITE_API_URL;
+
 export default function UserProfile(){
     const {setUserInfo,userInfo}=useContext(UserContext)
     const [userProfile,setUserProfile]=useState({});
@@ -16,7 +19,7 @@ export default function UserProfile(){
     useEffect(() => {
         async function callDB() {
 
-            const res = await fetch("http://localhost:3000/userprofile", {
+            const res = await fetch(`${API_URL}/userprofile`, {
                 method: 'POST',
                 body: JSON.stringify({id }),
                 headers: { 'Content-Type': 'application/json' },
@@ -59,9 +62,8 @@ export default function UserProfile(){
             email:userProfile.email
         }
         
-        
         try{
-            const responseUpdate =await fetch('http://localhost:3000/updateprofile',{
+            const responseUpdate =await fetch(`${API_URL}/updateprofile`,{
             method:'PUT',
             headers:{
                 'Content-Type':'application/json'

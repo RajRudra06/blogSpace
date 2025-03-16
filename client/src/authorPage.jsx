@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import authorSinglePost from '/Users/rudrarajpurohit/Desktop/blog space /client/src/authorSinglePost.jsx'
 import AuthorSinglePost from "/Users/rudrarajpurohit/Desktop/blog space /client/src/authorSinglePost.jsx";
 
+const API_URL=import.meta.env.VITE_API_URL;
+
+
 export default function AuthorPage(){
 
 
@@ -13,7 +16,7 @@ export default function AuthorPage(){
     useEffect(() => {
         // make the func as async and call it dont make the func of useEffect func as async
         async function fetchAuthorPost() {
-            const response = await fetch(`http://localhost:3000/authorpost/${author}`,{
+            const response = await fetch(`${API_URL}/authorpost/${author}`,{
                 method: 'GET',
             });
             const msg = await response.json();

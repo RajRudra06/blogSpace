@@ -7,6 +7,7 @@ import { Navigate } from "react-router-dom";
 import { useContext, useEffect} from "react"
 import { UserContext } from "/Users/rudrarajpurohit/Desktop/blog space /client/src/UserContext.jsx"
 import { PostContext } from "/Users/rudrarajpurohit/Desktop/blog space /client/src/postContext.jsx";
+const API_URL=import.meta.env.VITE_API_URL;
 
 const modules={
 
@@ -56,7 +57,7 @@ export default function Create(){
         
 
         try{
-            const responseUpdate =await fetch('http://localhost:3000/updatepost',{
+            const responseUpdate=await fetch(`${API_URL}/updatepost`,{
             method:'PUT',
             headers:{
                 'Content-Type':'application/json'
@@ -99,7 +100,7 @@ export default function Create(){
         // Inside a useEffect (when you want to update state based on props, context, or other state).
 
        try { 
-        const response =await fetch('http://localhost:3000/createpost',{
+        const response =await fetch(`${API_URL}/createpost`,{
             method:'POST',
             body:data,
         });

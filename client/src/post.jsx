@@ -1,6 +1,9 @@
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
+
+const API_URL=import.meta.env.VITE_API_URL;
+
 export default function Post({_id,title,summary,cover,content,createdAt,author}){
   console.log(cover)
     return(
@@ -8,7 +11,7 @@ export default function Post({_id,title,summary,cover,content,createdAt,author})
       <div className="post">
           <div className="image"> 
           <Link to={`/post/${_id}`}>
-          <img src={'http://localhost:3000/'+cover} alt="" />
+          <img src={`${API_URL}/`+cover} alt="" />
           </Link>
           </div>
            
