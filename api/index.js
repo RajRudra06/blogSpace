@@ -50,6 +50,7 @@ app.post("/register",async(req,res)=>{
             msg:"User already exists"
           })
         }
+        console.log("REnder Regostrtaion:: ")
         const userDoc=await userModel.create({
         username,
         password:bcrypt.hashSync(password,saltKey),
