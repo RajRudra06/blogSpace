@@ -1,7 +1,7 @@
 import Header from "../header";
 import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
-import 'react-quill-new/dist/quill.snow.css';
 import ReactQuill from "react-quill-new" 
+import 'react-quill-new/dist/quill.snow.css'
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useContext, useEffect} from "react"

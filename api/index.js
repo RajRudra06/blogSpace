@@ -19,7 +19,7 @@ const uploadMiddleware=multer({dest:'uploads/'})
 const saltKey=bcrypt.genSaltSync(10);
 const jwtSecret='jhasbvdjhfbjhsbdkfnksad872y3rkjl'
 
-app.use(cors({credentials:true, origin:'http://localhost:5173'}));
+app.use(cors({credentials:true, origin:'http://localhost:5173',methods:['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],allowedHeaders:['Content-Type','Authorization']}));
 app.use(json());
 // makes the cookie available in req.cookies.token which will be send by the POST/GET request
 app.use(cookieParser())
@@ -83,7 +83,8 @@ app.post("/login",async(req,res)=>{
             if(err) throw err;
             res.cookie('token', token,{
               httpOnly:true,
-              sameSite:"strict"
+              sameSite:'lax',
+              maxAge:30*24*60*60*1000
             }).json({
               id:existingUser._id,
               username,
@@ -153,7 +154,11 @@ app.get('/posts',async (req,res)=>{
 })
 
 app.post('/logout',(req,res)=>{
-  res.cookie('token', '').json('ok')
+  res.cookie('token', '',{
+    httpOnly:true,
+    sameSite:'lax',
+    expires: new Date(0)
+  }).json('ok')
 })
 
 app.post('/createpost',uploadMiddleware.single('file'),async (req,res)=>{

@@ -22,8 +22,10 @@ export default function HeaderPost(){
     fetch(`${API_URL}/logout`,{
       credentials:'include',
       method:'POST',
+    }).then(()=>{
+      setUserInfo(null)
+
     })
-    setUserInfo(null)
     
   }
 
