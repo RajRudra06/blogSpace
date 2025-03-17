@@ -13,7 +13,7 @@ export default function Header(){
         credentials:'include',
       }).then(response=>{
         response.json().then(userInfo=>{
-            setUserInfo(userInfo)
+            //setUserInfo(userInfo)
         })
       })
      
@@ -28,7 +28,7 @@ export default function Header(){
     window.location.reload();    
   }
 
-  console.log("RENDERER", userInfo)
+  console.log("RENDERER ", userInfo)
 
   const username=userInfo?.username
 

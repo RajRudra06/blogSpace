@@ -24,10 +24,12 @@ export default function Login(){
             });
         
             const msgBackend = await res.json();
-            console.log(msgBackend);
+            setUserInfo(msgBackend); // Use msgBackend directly
+
+            console.log("Render BACKEND:",msgBackend,"renderer userinfo", userInfo);
         
             if (res.ok) {
-                setUserInfo(msgBackend); // Use msgBackend directly
+                console.log("Render USERINFO ",userInfo);
                 alert('Login Successful !!!');
                 setRedirect(true);
                 console.log("renderer::::",userInfo)

@@ -5,7 +5,7 @@ import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
 const API_URL=import.meta.env.VITE_API_URL;
 
 export default function Post({_id,title,summary,cover,content,createdAt,author}){
-  console.log(cover)
+  //console.log(cover)
     return(
        
       <div className="post">
@@ -49,14 +49,16 @@ export default function Post({_id,title,summary,cover,content,createdAt,author})
             </Link>
             
             <div className="about">
-              <Link to={`/authorpage/${author}`}><p style={{all:'unset', fontSize:'30px', color:'#0D9488', fontStyle:'italic'}} href="" className="author">{author}</p></Link> 
+            {author ? (
+  <Link to={`/authorpage/${author}`}>
+    <p style={{all:'unset', fontSize:'30px', color:'#0D9488', fontStyle:'italic'}} className="author">
+      {author}
+    </p>
+  </Link>
+) : null}
               <time className="time">{format(new Date(createdAt), 'MMM d, yyyy HH:mm')}</time>
             </div>
             <p className="summary" style={{ fontSize: '20px', fontFamily: 'Poppins, sans-serif', lineHeight: '1.5', color: '#555', fontWeight: '400', letterSpacing: '0.5px' }}>{summary}</p>
-
-
-
-
           </div>
         </div>
     )
