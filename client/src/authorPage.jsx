@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom"
 import Header from "./header";
 import { useEffect, useState } from "react";
-import authorSinglePost from '/Users/rudrarajpurohit/Desktop/blog space /client/src/authorSinglePost.jsx'
-import AuthorSinglePost from "/Users/rudrarajpurohit/Desktop/blog space /client/src/authorSinglePost.jsx";
+//import authorSinglePost from '/Users/rudrarajpurohit/Desktop/blog space /client/src/authorSinglePost.jsx'
+import AuthorSinglePost from "/Users/rudrarajpurohit/Desktop/Blog Space/client/src/authorSinglePost.jsx";
 
 const API_URL=import.meta.env.VITE_API_URL;
 

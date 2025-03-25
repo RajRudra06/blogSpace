@@ -1,5 +1,5 @@
 import Header from "./header"
-import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
+import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
 import { useContext, useState } from "react"
 import { Navigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
@@ -11,7 +11,6 @@ export default function Login(){
     const [password,setPassword]=useState('');
     const [redirect,setRedirect]=useState(false);
     const {setUserInfo,userInfo}=useContext(UserContext);
-
     async function login(ev){
         ev.preventDefault();
 

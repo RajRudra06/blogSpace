@@ -9,11 +9,17 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 import jwt from 'jsonwebtoken'; 
 import cookieParser from 'cookie-parser';
 import multer from 'multer';
 import fs from 'fs';
+
+
+// imports for postgress
+
+import connectDB from './db resources/connectDB.js';
+import { getUserByUsername,insertIntoUsersTable,createUsersTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,} from './db resources/crud.js';
+
 const uploadMiddleware=multer({dest:'uploads/'})
 
 const saltKey=bcrypt.genSaltSync(10);
@@ -28,22 +34,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
+//createUsersTable();
+createPostsTable()
 
-async function connectDB() {
-    try {
-      await mongoose.connect('mongodb+srv://upasana36897:ZHmt0bctgEw1lP72@blogspacecluster0.9dpdg.mongodb.net/?retryWrites=true&w=majority&appName=blogSpaceCluster0');
-      console.log("Connected to MongoDB");
-    } catch (error) {
-      console.error("MongoDB connection error:", error);
-    }
-  }
+connectDB()
   
-connectDB();
-  
+// Postgress shifting is done 
 app.post("/register",async(req,res)=>{
     const {username,password,lastName,firstName,email}=req.body
     try {
-        const existingUser=await userModel.findOne({username})
+        const existingUser=await getUserByUsername(username);
         console.log(existingUser)
         if(existingUser){
           return res.status(400).json({
@@ -51,14 +51,7 @@ app.post("/register",async(req,res)=>{
           })
         }
         console.log("REnder Regostrtaion:: ")
-        const userDoc=await userModel.create({
-        username,
-        password:bcrypt.hashSync(password,saltKey),
-        lastName:lastName,
-        firstName:firstName,
-        email:email
-
-        })
+        const userDoc=await insertIntoUsersTable(username, bcrypt.hashSync(password,saltKey),firstName,lastName,email);
         res.json({
           msg:"Registered Succesfully"
         })
@@ -70,24 +63,25 @@ app.post("/register",async(req,res)=>{
     
 })
 
+// Postgress shifting is done 
 app.post("/login",async(req,res)=>{
   const {username,password}=req.body
   try {
-      const existingUser=await userModel.findOne({username})
-      console.log(existingUser)
+    const existingUser=await getUserByUsername(username);
+    console.log("Existing user:::::::::",existingUser)
       const passOK=bcrypt.compareSync(password, existingUser.password);
       console.log(bcrypt.compareSync(password, existingUser.password))
       console.log(existingUser)
       if(existingUser!=null){
         if(passOK){
-          jwt.sign({username,id:existingUser._id},jwtSecret,{},(err,token)=>{
+          jwt.sign({username,id:existingUser.id},jwtSecret,{},(err,token)=>{
             if(err) throw err;
             res.cookie('token', token,{
               httpOnly:true,
               sameSite:'lax',
               maxAge:30*24*60*60*1000
             }).json({
-              id:existingUser._id,
+              id:existingUser.id,
               username,
             })
           })
@@ -110,16 +104,7 @@ app.post("/login",async(req,res)=>{
   
 })
 
-// app.get('/profile',(req,res)=>{
-//   const {token}=req.cookies;
-//   jwt.verify(token, jwtSecret, {}, (err,info)=>{
-//     if(err) throw err;
-//     res.json(info);
-//   })
-//   // res.json(req.cookies)
-//   console.log(req.cookies)
-// })
-
+// Postgress shifting is done 
 app.get('/profile', (req, res) => {
   const {token} = req.cookies;
   console.log(token)
@@ -134,14 +119,14 @@ app.get('/profile', (req, res) => {
     
     try {
       // Get the latest user data from database
-      const user = await userModel.findById(info.id);
+      const user = await getUserById(info.id);
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
       
       // Return consistent property names
       res.json({
-        id: user._id, // Use 'id' here to match frontend expectation
+        id: user.id, // Use 'id' here to match frontend expectation
         username: user.username
       });
     } catch (err) {
@@ -150,8 +135,9 @@ app.get('/profile', (req, res) => {
   });
 });
 
+// Postgress shifting is done 
 app.get('/posts',async (req,res)=>{
-  const posts=await postModel.find().sort({createdAt:-1}).limit(20 );
+  const posts=await getAllPost()
   res.json(posts);
 })
 
@@ -163,6 +149,7 @@ app.post('/logout',(req,res)=>{
   }).json('ok')
 })
 
+// Postgress shifting is done 
 app.post('/createpost',uploadMiddleware.single('file'),async (req,res)=>{
   const {originalname,path}=req.file
   const parts =originalname.split('.')
@@ -170,15 +157,10 @@ app.post('/createpost',uploadMiddleware.single('file'),async (req,res)=>{
   const ext=parts[parts.length-1];
   const newPath=path+'.'+ext;
   fs.renameSync(path, newPath);
-  const {title,summary,content,author}=req.body;
-  const postDoc=await postModel.create({
-    title:title,
-    summary:summary,
-    content:content,
-    cover:newPath,
-    author:author
-  })
 
+  const {title,summary,content,author}=req.body;
+  const postDoc=await insertIntoPostsTable(title,summary,content,author,newPath)
+  
   res.json({
     msg:"Post created succesfully",
     value:postDoc
@@ -187,21 +169,23 @@ app.post('/createpost',uploadMiddleware.single('file'),async (req,res)=>{
   console.log(req.body);
 })
 
+// Postgress shifting is done 
 app.get('/post/:id',async (req,res)=>{
   const {id}=req.params;
   console.log(id);
-  const postDoc=await postModel.findById(id);
+  const postDoc=await getPostById(id);
   res.json(postDoc);
 
 })
 
+// Postgress shifting is done 
 app.get('/authorpost/:author',async(req,res)=>{
   const {author}=req.params;
   console.log(author);
 
   try
   {
-    const authorAllPost=await postModel.find({author:author})
+    const authorAllPost=await getPostByAuthor(author)
     console.log(authorAllPost);
     res.json(authorAllPost);
   }
@@ -211,20 +195,19 @@ app.get('/authorpost/:author',async(req,res)=>{
       error:"Failed to fetch posts"
     })
   }
-  
 
 })
 
+// Postgress shifting is done 
 app.put("/updatepost", uploadMiddleware.single('file'), async(req,res)=>{
   res.json({msg:"mesage recieve"});
   console.log("received body:: ");
   console.log(req.body);
-  const {_id,title,summary,content}=req.body;
-  console.log(req.body._id);
+  const {id,title,summary,content}=req.body;
+  console.log(req.body.id);
 
   try{
-    const updateDoc=await postModel.updateOne({_id},{
-    $set:{title,summary,content}});
+    const updateDoc=await updatePostDetailsById(id,title,summary,content)
 
     console.log("Update odijbjhib::::")
     console.log(updateDoc)
@@ -235,38 +218,34 @@ app.put("/updatepost", uploadMiddleware.single('file'), async(req,res)=>{
 
 })  
 
+// Postgress shifting is done 
 app.put("/updateprofile", uploadMiddleware.single('file'), async(req,res)=>{
-  console.log("received body:: ");
+  console.log("received body:: from update");
   console.log(req.body);
-  const {_id,username,firstName,lastName,email}=req.body;
-  console.log(req.body._id);
+  const {id,username,firstName,lastName,email}=req.body;
+  console.log(req.body);
 
   try{
     
-
-    const currDoc=await userModel.findById(_id);
+    //updating author name for all posts
+    const currDoc=await getUserById(id);
     console.log("currc od username:   ")
     console.log(currDoc.username);
     console.log(username);
-    const updateAuthorName=await postModel.updateMany({author:currDoc.username},{
-      $set:{author:username}
-    })
+    const updateAuthorName=await udpateAuthorNameChange(currDoc.username,username)
 
     console.log("authorn name ", updateAuthorName)
 
-    const updateDoc=await userModel.updateOne({_id},{
-      $set:{firstName,lastName,email,username}});
+    const updateDoc=await updateUserDetailsById(id,username,firstName,lastName,email);
 
-    console.log("Update odijbjhib::::")
-    console.log(updateDoc)
-
-    const newToken = jwt.sign({ id: _id, username, firstName, lastName, email }, jwtSecret);
+    console.log("Update odijbjhib::::",updateDoc)
+    const newToken = jwt.sign({ id: id, username, firstName, lastName, email }, jwtSecret);
 
     // Set the new token in the cookie
     res.cookie('token', newToken, { httpOnly: true });
 
     res.json({
-      _id:_id,username:username,firstName:firstName,lastName:lastName,email:email
+      id:updateDoc.id,username:updateDoc.username,firstName:updateDoc.firstname,lastName:updateDoc.lastname,email:updateDoc.email
     });
 }
   catch(err){
@@ -275,30 +254,26 @@ app.put("/updateprofile", uploadMiddleware.single('file'), async(req,res)=>{
 
 })  
 
+// Postgress shifting is done 
 app.post('/userprofile', async (req,res)=>{
   console.log("what we gotid wise")
   const {id}=req.body;
   console.log(id)
-  const {_id, username,firstName,lastName,email,password}=await userModel.findById(id)
-
+  const {_id, username,firstname,lastname,email,password}=await getUserById(id)
+  console.log(_id,username,firstname)
   console.log("what we gotid wise after")
     console.log(id)
 
-  console.log(_id,username,email,firstName,lastName);
+  console.log(id,username,email,firstname,lastname);
 
   res.json({
     id:_id,
     username:username,
     email:email,
-    firstname:firstName,
-    lastname:lastName,
+    firstname:firstname,
+    lastname:lastname,
   });
 })
  
 app.listen(3000)
 
-
-//mongo Credentials
-//username-upasana36897
-//password-ZHmt0bctgEw1lP72
-//connectionString-`mongodb+srv://upasana36897:ZHmt0bctgEw1lP72@blogspacecluster0.9dpdg.mongodb.net/?retryWrites=true&w=majority&appName=blogSpaceCluster0`

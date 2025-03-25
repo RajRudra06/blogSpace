@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import HeaderPost from "../../headerPost";
-import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
+import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
 import { Link, useParams } from "react-router-dom";
 
 import { UserContext } from "../UserContext";
@@ -39,6 +39,29 @@ export default function SinglePostPage(){
     }
 
     console.log(postInfo?.content);
+    console.log("daterrr:",postInfo)
+
+    const datemain=postInfo.created_at;
+
+    function formatDateTime(date2) {
+        const date = new Date(date2);
+        
+        // Convert to IST (UTC+5:30)
+        const ISTOffset = 5.5 * 60 * 60 * 1000; // 5 hours 30 minutes in milliseconds
+        const ISTTime = new Date(date.getTime() + ISTOffset);
+      
+        return ISTTime.toLocaleString("en-GB", { 
+            day: "numeric", 
+            month: "long", 
+            year: "numeric",
+            hour: "2-digit", 
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false // Set to true if you want AM/PM format
+        });
+      }
+    
+      const formattedDate = formatDateTime(datemain);
 
 
     return (
@@ -52,7 +75,7 @@ export default function SinglePostPage(){
         </div>
       
         <div className="dataAndTime">
-            <time className="time">{format(new Date(postInfo.createdAt), 'MMM d yyyy HH:mm')}
+            <time className="time">{formattedDate}
             </time>
         </div>
         

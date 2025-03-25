@@ -1,8 +1,8 @@
 import {Link} from "react-router-dom"
-import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
+import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
 import { useContext, useEffect, useState } from "react"
 import { UserContext } from "./UserContext"
-import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
+import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
 import { Navigate } from "react-router-dom"
 const API_URL=import.meta.env.VITE_API_URL;
 
@@ -13,7 +13,7 @@ export default function Header(){
         credentials:'include',
       }).then(response=>{
         response.json().then(userInfo=>{
-            //setUserInfo(userInfo)
+            setUserInfo(userInfo)
         })
       })
      
@@ -26,9 +26,10 @@ export default function Header(){
     })
     setUserInfo(null)
     window.location.reload();    
+  
   }
 
-  console.log("RENDERER ", userInfo)
+  console.log("in header ", userInfo)
 
   const username=userInfo?.username
 

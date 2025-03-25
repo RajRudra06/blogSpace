@@ -1,4 +1,4 @@
-import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
+import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
 
 
 export default function Update(){

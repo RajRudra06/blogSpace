@@ -1,22 +1,57 @@
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
-import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
+import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
 
 const API_URL=import.meta.env.VITE_API_URL;
 
-export default function Post({_id,title,summary,cover,content,createdAt,author}){
+
+
+export default function Post({id,title,summary,cover,content,created_at,author}){
   //console.log(cover)
+
+//   function formatDateTime(created_at) {
+//     const date = new Date(created_at);
+//     return date.toLocaleString("en-GB", { 
+//         day: "numeric", 
+//         month: "long", 
+//         year: "numeric",
+//         hour: "2-digit", 
+//         minute: "2-digit",
+//         second: "2-digit",
+//         timeZone: "Asia/Kolkata"
+//         //hour12: true // For AM/PM format
+//     });
+// }
+function formatDateTime(created_at) {
+  const date = new Date(created_at);
+  
+  // Convert to IST (UTC+5:30)
+  const ISTOffset = 5.5 * 60 * 60 * 1000; // 5 hours 30 minutes in milliseconds
+  const ISTTime = new Date(date.getTime() + ISTOffset);
+
+  return ISTTime.toLocaleString("en-GB", { 
+      day: "numeric", 
+      month: "long", 
+      year: "numeric",
+      hour: "2-digit", 
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false // Set to true if you want AM/PM format
+  });
+}
+
+  const formattedDate = formatDateTime(created_at);
     return(
        
       <div className="post">
           <div className="image"> 
-          <Link to={`/post/${_id}`}>
+          <Link to={`/post/${id}`}>
           <img src={`${API_URL}/`+cover} alt="" />
           </Link>
           </div>
            
           <div className="info">
-            <Link to={`/post/${_id}`}>
+            <Link to={`/post/${id}`}>
             <h2 
   style={{
     color: 'black', 
@@ -56,7 +91,7 @@ export default function Post({_id,title,summary,cover,content,createdAt,author})
     </p>
   </Link>
 ) : null}
-              <time className="time">{format(new Date(createdAt), 'MMM d, yyyy HH:mm')}</time>
+              <time className="time">{formattedDate}</time>
             </div>
             <p className="summary" style={{ fontSize: '20px', fontFamily: 'Poppins, sans-serif', lineHeight: '1.5', color: '#555', fontWeight: '400', letterSpacing: '0.5px' }}>{summary}</p>
           </div>

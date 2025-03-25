@@ -1,12 +1,12 @@
 import Header from "../header";
-import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
+import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
 import ReactQuill from "react-quill-new" 
 import 'react-quill-new/dist/quill.snow.css'
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useContext, useEffect} from "react"
-import { UserContext } from "/Users/rudrarajpurohit/Desktop/blog space /client/src/UserContext.jsx"
-import { PostContext } from "/Users/rudrarajpurohit/Desktop/blog space /client/src/postContext.jsx";
+import { UserContext } from "/Users/rudrarajpurohit/Desktop/Blog Space/client/src/UserContext.jsx"
+import { PostContext } from "/Users/rudrarajpurohit/Desktop/Blog Space/client/src/postContext.jsx";
 const API_URL=import.meta.env.VITE_API_URL;
 
 const modules={
@@ -48,7 +48,7 @@ export default function Create(){
     
     async function updatePost(ev){
         const postContextData={
-            _id:postInfoContext._id,
+            id:postInfoContext.id,
             title:title,
             summary:summary,
             content:content
@@ -64,8 +64,9 @@ export default function Create(){
             },
             body:JSON.stringify(postContextData),
         });
-
-        console.log(responseUpdate);
+        const res=await responseUpdate.json()
+        console.log("responsdeejdnejnd:::",res);
+        console.log("inofr pos piast ",postContextData)
 
         if(responseUpdate.ok){
             setContent('');

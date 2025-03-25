@@ -1,5 +1,5 @@
 import Header from "./header";
-import '/Users/rudrarajpurohit/Desktop/blog space /client/src/App.css'
+import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
 import { useContext, useEffect, useState } from "react"
 import { UserContext } from "./UserContext"
 import { Navigate } from "react-router-dom";
@@ -13,9 +13,8 @@ export default function UserProfile(){
     const [isChanged, setIsChanged] = useState(false);
     const [redirect,setRedirect]=useState(false);
     
-
     const id=userInfo.id;
-    console.log(userInfo)
+    console.log("From User profile",id);
     useEffect(() => {
         async function callDB() {
 
@@ -49,19 +48,18 @@ export default function UserProfile(){
         setIsChanged(true);
     };
 
-    console.log(userInfo)
+    console.log("user progile: infor:",userInfo)
 
     async function updateProfile(ev){
-        
 
         const userProfileData={
-            _id:userProfile.id,
+            id:userInfo.id,
             username:userProfile.username,
             firstName:userProfile.firstname,
             lastName:userProfile.lastname,
             email:userProfile.email
         }
-        
+        console.log("user data form user profile:   ",userProfileData)
         try{
             const responseUpdate =await fetch(`${API_URL}/updateprofile`,{
             method:'PUT',
@@ -73,9 +71,11 @@ export default function UserProfile(){
 
        if(responseUpdate.ok) { const updateRes=await responseUpdate.json();
         console.log("gotten", updateRes)
-        setRedirect(true);
-        setUserInfo({username:updateRes.username,_id:updateRes._id,iat:userInfo.iat});
+        console.log("After update and before setting",userInfo.id);
+        setUserInfo({id:updateRes.id,username:updateRes.username});
+        console.log("After update and after setting",userInfo.id);
         alert("Profile has been updated succesfully !!!")}
+        setRedirect(true);
         }
         catch(err){
             alert("Server Down, try again later"+err)
