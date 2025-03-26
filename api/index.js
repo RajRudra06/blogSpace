@@ -1,7 +1,7 @@
 import userModel from './models/User.js';
 import postModel from './models/Post.js';
 import express, { json } from 'express';
-
+console.log("In Index.js");
 const crud = await import(path.join(__dirname, 'db_resources', 'crud.js'));
 console.log("crud loaction:::",crud);
 
