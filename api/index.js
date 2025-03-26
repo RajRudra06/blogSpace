@@ -1,6 +1,10 @@
 import userModel from './models/User.js';
 import postModel from './models/Post.js';
 import express, { json } from 'express';
+
+const crud = await import(path.join(__dirname, 'db_resources', 'crud.js'));
+console.log("crud loaction:::",crud);
+
 const app=express();
 import cors from 'cors';
 import { default as mongoose } from 'mongoose';
@@ -17,8 +21,7 @@ import fs from 'fs';
 //import path from 'path';
 //import { fileURLToPath } from 'url';
 
-const crud = await import(path.join(__dirname, 'db_resources', 'crud.js'));
-console.log("crud loaction:::",crud);
+
 // imports for postgress
 
 import connectDB from './db_resources/connectDB.js';
