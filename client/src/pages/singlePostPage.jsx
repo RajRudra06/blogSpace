@@ -38,6 +38,7 @@ export default function SinglePostPage(){
         )
     }
 
+
     console.log(postInfo?.content);
     console.log("daterrr:",postInfo)
 
@@ -88,14 +89,19 @@ export default function SinglePostPage(){
         
         </div>
 
-        {userInfo?.username === postInfo?.author?<Link to="/create" ><button onClick={setPostContext} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px'}}>🖌️ Edit this post</button></Link>:null}
+        {userInfo?.username === postInfo?.author?<Link to="/create" >
+            <div style={{display:'flex',justifyContent:'center',alignItems:'center',gap:'50px'}}>
+            <button onClick={setPostContext} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>🖌️ Edit this post</button><button onClick={setPostContext} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px',margin:'0px', marginTop:'10px',marginBottom:'10px'}}>🗑️ Delete this post</button>
+            </div>
+            
+            </Link>:null}
        
         <div  className="imagePost" >
             <img src={`${API_URL}/${postInfo.cover}`} alt="" />
         </div>
 
         <div 
-  className="content" 
+  className="content" style={{color:'gray', textAlign:'center', marginLeft:'25px', marginRight:'25px', fontFamily:'-moz-initial', fontSize:'40px',marginTop:'50px'}}
   dangerouslySetInnerHTML={{ __html: postInfo?.content }} 
 />
 

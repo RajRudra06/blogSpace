@@ -17,8 +17,8 @@ import fs from 'fs';
 
 // imports for postgress
 
-import connectDB from './db resources/connectDB.js';
-import { getUserByUsername,insertIntoUsersTable,createUsersTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,} from './db resources/crud.js';
+import connectDB from './db_resources/connectDB.js';
+import { getUserByUsername,insertIntoUsersTable,createUsersTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,} from './db_resources/crud.js';
 
 const uploadMiddleware=multer({dest:'uploads/'})
 
