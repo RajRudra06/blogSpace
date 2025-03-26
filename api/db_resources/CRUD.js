@@ -271,6 +271,7 @@ export async function udpateAuthorNameChange(oldname,newname){
     }
 }
 
+
 // function to update user Details
 export async function updateUserDetailsById(id,username,firstname,lastname,email){
     const values=[id,username,firstname,lastname,email];
