@@ -14,8 +14,8 @@ import cookieParser from 'cookie-parser';
 import multer from 'multer';
 import fs from 'fs';
 
-import path from 'path';
-import { fileURLToPath } from 'url';
+//import path from 'path';
+//import { fileURLToPath } from 'url';
 
 const crud = await import(path.join(__dirname, 'db_resources', 'crud.js'));
 console.log("crud loaction:::",crud);
