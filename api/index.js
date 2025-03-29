@@ -1,10 +1,6 @@
 import userModel from './models/User.js';
 import postModel from './models/Post.js';
 import express, { json } from 'express';
-console.log("In Index.js");
-const crud = await import(path.join(__dirname, 'db_resources', 'crud.js'));
-console.log("crud loaction:::",crud);
-
 const app=express();
 import cors from 'cors';
 import { default as mongoose } from 'mongoose';
@@ -18,14 +14,11 @@ import cookieParser from 'cookie-parser';
 import multer from 'multer';
 import fs from 'fs';
 
-//import path from 'path';
-//import { fileURLToPath } from 'url';
-
 
 // imports for postgress
 
 import connectDB from './db_resources/connectDB.js';
-import { getUserByUsername,insertIntoUsersTable,createUsersTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,} from './db_resources/crud.js';
+import { getUserByUsername,insertIntoUsersTable,createUsersTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
 
 const uploadMiddleware=multer({dest:'uploads/'})
 
@@ -42,8 +35,7 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 //createUsersTable();
-createPostsTable()
-
+// createPostsTable()
 connectDB()
   
 // Postgress shifting is done 
@@ -282,5 +274,34 @@ app.post('/userprofile', async (req,res)=>{
   });
 })
  
+app.delete('/delete/:id', async (req,res)=>{
+  const {id}=req.params;
+
+  try{
+
+    const resOfDeletion = await deletePostById(id);
+    if(resOfDeletion>0){
+    return res.status(200).json({
+      msg:"Post deleted Succesfully"
+    })
+  }
+
+  else{
+    return res.status(404).json({
+      msg:"Post not found"
+    })
+  }
+
+  res.status(200).json({
+    msg:"hello ji"
+  })
+
+  }
+  catch(err){
+    console.error("Error deleting post:", err);
+    return res.status(500).json({ msg: "Internal Server Error" })
+  }
+  
+})
 app.listen(3000)
 

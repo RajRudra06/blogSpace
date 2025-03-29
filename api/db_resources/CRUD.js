@@ -312,3 +312,23 @@ export async function addCreatedAtColumn() {
         console.log("❌ Error adding 'created_at' column: ", err);
     }
 }
+
+export async function deletePostById(id){
+    const value=[id];
+    const isDeleted=0;
+
+    try {
+        //await connectDB();
+        const res=await pool.query(`
+        DELETE FROM posts WHERE id=$1`,value)
+        
+        if(res.rowCount>0){
+            isDeleted=1;
+            return isDeleted;
+        }
+        
+    } catch (error) {
+            console.log("Error Deleting the post", error)
+            return isDeleted;
+    }   
+}

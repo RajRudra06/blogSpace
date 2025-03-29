@@ -38,6 +38,30 @@ export default function SinglePostPage(){
         )
     }
 
+    async function deletePost(){
+
+        try{
+            const res=await fetch(`${API_URL}/delete/${id}`,{
+                method:'DELETE',
+                headers:{
+                    'Content-Type':'application/json'
+                }
+            })
+    
+            const {msg}=await res.json();
+            console.log("deleted message",msg);
+            if(msg){
+                alert("Post deleted succesfully. Directing to Home Page...")
+            }
+    
+            console.log("Consoling on delete",response);
+    
+        }catch(err){
+            console.log("Error on client side",err);
+        }
+        
+    }
+
 
     console.log(postInfo?.content);
     console.log("daterrr:",postInfo)
@@ -91,10 +115,14 @@ export default function SinglePostPage(){
 
         {userInfo?.username === postInfo?.author?<Link to="/create" >
             <div style={{display:'flex',justifyContent:'center',alignItems:'center',gap:'50px'}}>
-            <button onClick={setPostContext} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>🖌️ Edit this post</button><button onClick={setPostContext} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px',margin:'0px', marginTop:'10px',marginBottom:'10px'}}>🗑️ Delete this post</button>
+            <button onClick={setPostContext} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>🖌️ Edit this post</button>
+            <Link to="/"> <button onClick={async ()=>{await deletePost();navigate('/')}} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px',margin:'0px', marginTop:'10px',marginBottom:'10px'}}>🗑️ Delete this post</button></Link>
+           
             </div>
             
             </Link>:null}
+
+
        
         <div  className="imagePost" >
             <img src={`${API_URL}/${postInfo.cover}`} alt="" />
@@ -104,11 +132,7 @@ export default function SinglePostPage(){
   className="content" style={{color:'gray', textAlign:'center', marginLeft:'25px', marginRight:'25px', fontFamily:'-moz-initial', fontSize:'40px',marginTop:'50px'}}
   dangerouslySetInnerHTML={{ __html: postInfo?.content }} 
 />
-
-
         </div>
-        
-        
         </>
         
     )
