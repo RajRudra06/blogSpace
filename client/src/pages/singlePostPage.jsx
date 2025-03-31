@@ -14,8 +14,8 @@ export default function SinglePostPage(){
     const {postInfoContext,setPostInfoContext}=useContext(PostContext);
     const {id}=useParams();
     const [error,setError]=useState('');
-    const {setUserInfo,userInfo}=useContext(UserContext)
-
+    const {setUserInfo,userInfo}=useContext(UserContext);
+    const [isClickedOnce,setIsClickedOnce]=useState(false);
 
     //runs when component mounts
     useEffect(()=>{
@@ -115,15 +115,13 @@ export default function SinglePostPage(){
 
         {userInfo?.username === postInfo?.author?<Link to="/create" >
             <div style={{display:'flex',justifyContent:'center',alignItems:'center',gap:'50px'}}>
-            <button onClick={setPostContext} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>🖌️ Edit this post</button>
-            <Link to="/"> <button onClick={async ()=>{await deletePost();navigate('/')}} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px',margin:'0px', marginTop:'10px',marginBottom:'10px'}}>🗑️ Delete this post</button></Link>
+            <button onClick={()=>{setPostContext(); setIsClickedOnce(true)}} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}} disabled={isClickedOnce}>🖌️ Edit this post</button>
+            <Link to="/"> <button onClick={async ()=>{await deletePost();setIsClickedOnce(true); navigate('/')}} style={{cursor:"pointer", width:'170px', height:'50px',textAlign:'center',fontSize:'20px',margin:'0px', marginTop:'10px',marginBottom:'10px'}} disabled={isClickedOnce}>🗑️ Delete this post</button></Link>
            
             </div>
             
             </Link>:null}
 
-
-       
         <div  className="imagePost" >
             <img src={`${API_URL}/${postInfo.cover}`} alt="" />
         </div>

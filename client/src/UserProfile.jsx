@@ -12,6 +12,8 @@ export default function UserProfile(){
     const username=userInfo.username;
     const [isChanged, setIsChanged] = useState(false);
     const [redirect,setRedirect]=useState(false);
+    const [isClickedOnce,setIsClickedOnce]=useState(false);
+
     
     const id=userInfo.id;
     console.log("From User profile",id);
@@ -46,12 +48,14 @@ export default function UserProfile(){
             [field]: value
         }));
         setIsChanged(true);
+        setIsClickedOnce(true);
     };
 
     console.log("user progile: infor:",userInfo)
 
     async function updateProfile(ev){
-
+        setIsClickedOnce(true);
+        setIsChanged(false);
         const userProfileData={
             id:userInfo.id,
             username:userProfile.username,
@@ -87,9 +91,6 @@ export default function UserProfile(){
     if(redirect){
         return <Navigate to ={'/'}/>    
     }
-
-    
-
 
     return (
         <div className="profileMain">
@@ -140,7 +141,7 @@ export default function UserProfile(){
 
                     <button onClick={updateProfile}
                         className={`saveButton ${isChanged ? 'active' : 'disabled'}`} 
-                        disabled={!isChanged}
+                        disabled={!isChanged&&isClickedOnce}
                     >
                         Save Changes
                     </button>

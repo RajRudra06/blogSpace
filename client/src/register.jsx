@@ -10,6 +10,7 @@ export default function Register(){
     const [password,setPassword]=useState('')
     const [firstName,setFirstName]=useState('')
     const [lastName, setLastName]=useState('')
+    const [isClickedOnce,setIsClickedOnce]=useState(false)
     const[email,setEmail]=useState('')
     const [confirmPassword,setConfirmPassword]=useState('')
     const isValidEmail = (email) => {
@@ -17,8 +18,8 @@ export default function Register(){
         return emailRegex.test(email);
     };
 
-    async function register(ev){
-        ev.preventDefault();
+    async function register(){
+        // ev.preventDefault();
 
         if (!isValidEmail(email)) {
             alert("Invalid email format");
@@ -50,7 +51,8 @@ export default function Register(){
             setLastName('');
     
             } catch (error) {
-                alert("Registration failed. Try again later...")
+                alert("Registration failed. Try again later...");
+                console.log("Eror o f regsi:",error);
             }}
     
             else{
@@ -66,6 +68,12 @@ export default function Register(){
 
     }
     const isFormValid = username && password && firstName && confirmPassword && email && firstName && lastName;
+    function registerAndClickOnce(ev){
+        ev.preventDefault();
+        //setIsClickedOnce(false)
+        register();
+        //isFormValid=false;
+    }
 
     return(
 
@@ -74,7 +82,7 @@ export default function Register(){
         <div className="homeMain">
         <div className="heading" style={{marginBottom:'20ppx'}}><h1>Register</h1>
             </div>
-        <form className="register" onSubmit={register}>
+        <form className="register" onSubmit={registerAndClickOnce}>
                 
                 <input type="text" 
                 placeholder="first name" 
@@ -121,7 +129,7 @@ export default function Register(){
                             transition: 'background-color 0.3s ease',
                             outline: 'none'
                         }}
-                        disabled={!isFormValid}
+                        disabled={!isFormValid&&!isClickedOnce}
                     >
                         Register
                     </button>

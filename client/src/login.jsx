@@ -11,7 +11,10 @@ export default function Login(){
     const [password,setPassword]=useState('');
     const [redirect,setRedirect]=useState(false);
     const {setUserInfo,userInfo}=useContext(UserContext);
+    const [isClickedOnce,setIsClickedOnce]=useState(false);
+
     async function login(ev){
+        setIsClickedOnce(true);
         ev.preventDefault();
 
         try {
@@ -64,7 +67,9 @@ export default function Login(){
                 />
                 <input type="password" placeholder="password" value={password}
                 onChange={(ev)=>{setPassword(ev.target.value)}}/>
-                <button style={{cursor:'pointer'}}>Login</button>
+                <button style={{cursor:'pointer',cursor: isClickedOnce ? 'not-allowed' : 'pointer', 
+            backgroundColor: isClickedOnce ? '#d3d3d3' : '', 
+            color: isClickedOnce ? '#a0a0a0' : ''} } disabled={isClickedOnce}>Login</button>
             </form>
             </div>
             

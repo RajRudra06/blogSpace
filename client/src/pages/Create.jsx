@@ -35,6 +35,7 @@ export default function Create(){
     const [summary,setSummary]=useState('');
     const [content,setContent]=useState('');
     const [files,setFiles]=useState('');
+    const [isClickedOnce,setIsClickedOnce]=useState(false);
     const [redirect,setRedirect]=useState(false);
     
 
@@ -47,6 +48,7 @@ export default function Create(){
     }, [postInfoContext]);
     
     async function updatePost(ev){
+        setIsClickedOnce(true);
         const postContextData={
             id:postInfoContext.id,
             title:title,
@@ -87,6 +89,7 @@ export default function Create(){
     }
 
     async function createNewPost(ev){
+        setIsClickedOnce(true);
         const data=new FormData();
         data.set('title',title);
         data.set('summary',summary);
@@ -152,7 +155,11 @@ export default function Create(){
     onChange={newValue=>setContent(newValue)}
     formats={formats}/>
 
-    {postInfoContext?<button style={{marginTop:'10px', cursor:'pointer'}}onClick={updatePost}>Update Post</button>:<button style={{marginTop:'10px'}}>Create Post</button>}
+    {postInfoContext?<button style={{marginTop:'10px', cursor:'pointer',cursor: isClickedOnce ? 'not-allowed' : 'pointer', 
+            backgroundColor: isClickedOnce ? '#d3d3d3' : '', 
+            color: isClickedOnce ? '#a0a0a0' : ''}} onClick={updatePost} disabled={isClickedOnce}>Update Post</button>:<button style={{marginTop:'10px',cursor:'pointer',cursor: isClickedOnce ? 'not-allowed' : 'pointer', 
+            backgroundColor: isClickedOnce ? '#d3d3d3' : '', 
+            color: isClickedOnce ? '#a0a0a0' : ''}} disabled={isClickedOnce}>Create Post</button>}
 </form>  
 
 </div>
