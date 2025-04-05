@@ -1,4 +1,4 @@
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
+import './App.css'
 
 
 import { createContext, useState } from "react";

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import HeaderPost from "../../headerPost";
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
+import '../App.css'
 import { Link, useParams } from "react-router-dom";
 
 import { UserContext } from "../UserContext";

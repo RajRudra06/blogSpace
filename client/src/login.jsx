@@ -1,5 +1,5 @@
 import Header from "./header"
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
+import './App.css'
 import { useContext, useState } from "react"
 import { Navigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
@@ -67,7 +67,7 @@ export default function Login(){
                 />
                 <input type="password" placeholder="password" value={password}
                 onChange={(ev)=>{setPassword(ev.target.value)}}/>
-                <button style={{cursor:'pointer',cursor: isClickedOnce ? 'not-allowed' : 'pointer', 
+                <button style={{cursor: isClickedOnce ? 'not-allowed' : 'pointer', 
             backgroundColor: isClickedOnce ? '#d3d3d3' : '', 
             color: isClickedOnce ? '#a0a0a0' : ''} } disabled={isClickedOnce}>Login</button>
             </form>

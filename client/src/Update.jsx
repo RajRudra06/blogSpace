@@ -1,5 +1,4 @@
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
-
+import './App.css'
 
 export default function Update(){
     return (

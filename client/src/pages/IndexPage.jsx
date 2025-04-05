@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import Post from "../post"
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
+import '../App.css'
 
 const API_URL=import.meta.env.VITE_API_URL;
 

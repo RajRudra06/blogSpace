@@ -1,8 +1,7 @@
 import {Link} from "react-router-dom"
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
+import './App.css'
 import { useContext, useEffect, useState } from "react"
 import { UserContext } from "./UserContext"
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
 import { Navigate } from "react-router-dom"
 const API_URL=import.meta.env.VITE_API_URL;
 

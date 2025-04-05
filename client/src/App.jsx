@@ -1,7 +1,7 @@
 import { Profiler, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
+import './App.css'
 import Post from './post'
 import Login from './login'
 import Register from './register'

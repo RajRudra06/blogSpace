@@ -1,12 +1,12 @@
 import Header from "../header";
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
+import '../App.css'
 import ReactQuill from "react-quill-new" 
 import 'react-quill-new/dist/quill.snow.css'
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useContext, useEffect} from "react"
-import { UserContext } from "/Users/rudrarajpurohit/Desktop/Blog Space/client/src/UserContext.jsx"
-import { PostContext } from "/Users/rudrarajpurohit/Desktop/Blog Space/client/src/postContext.jsx";
+import { UserContext } from "../UserContext.jsx"
+import { PostContext } from "../postContext.jsx";
 const API_URL=import.meta.env.VITE_API_URL;
 
 const modules={
@@ -155,9 +155,9 @@ export default function Create(){
     onChange={newValue=>setContent(newValue)}
     formats={formats}/>
 
-    {postInfoContext?<button style={{marginTop:'10px', cursor:'pointer',cursor: isClickedOnce ? 'not-allowed' : 'pointer', 
+    {postInfoContext?<button style={{marginTop:'10px',cursor: isClickedOnce ? 'not-allowed' : 'pointer', 
             backgroundColor: isClickedOnce ? '#d3d3d3' : '', 
-            color: isClickedOnce ? '#a0a0a0' : ''}} onClick={updatePost} disabled={isClickedOnce}>Update Post</button>:<button style={{marginTop:'10px',cursor:'pointer',cursor: isClickedOnce ? 'not-allowed' : 'pointer', 
+            color: isClickedOnce ? '#a0a0a0' : ''}} onClick={updatePost} disabled={isClickedOnce}>Update Post</button>:<button style={{marginTop:'10px',cursor: isClickedOnce ? 'not-allowed' : 'pointer', 
             backgroundColor: isClickedOnce ? '#d3d3d3' : '', 
             color: isClickedOnce ? '#a0a0a0' : ''}} disabled={isClickedOnce}>Create Post</button>}
 </form>  

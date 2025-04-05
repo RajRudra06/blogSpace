@@ -1,5 +1,5 @@
 import Header from "./header"
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
+import './App.css'
 import { useState } from "react"
 import { data } from "react-router-dom"
 

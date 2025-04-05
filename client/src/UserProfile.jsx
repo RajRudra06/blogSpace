@@ -1,5 +1,5 @@
 import Header from "./header";
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
+import './App.css'
 import { useContext, useEffect, useState } from "react"
 import { UserContext } from "./UserContext"
 import { Navigate } from "react-router-dom";
