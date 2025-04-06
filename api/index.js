@@ -18,7 +18,7 @@ import fs from 'fs';
 // imports for postgress
 
 import connectDB from './db_resources/connectDB.js';
-import { getUserByUsername,insertIntoUsersTable,createUsersTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
+import { unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
 
 const uploadMiddleware=multer({dest:'uploads/'})
 
@@ -35,7 +35,10 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 //createUsersTable();
-// createPostsTable()
+//createPostsTable()
+//createFollowsTable();
+//addUniqueConstraint();
+
 connectDB()
   
 // Postgress shifting is done 
@@ -195,6 +198,93 @@ app.get('/authorpost/:author',async(req,res)=>{
     })
   }
 
+})
+
+// follow a author 
+app.post('/followauthor',async(req,res)=>{
+  const {username,author}=req.body;
+  console.log("Author:  ",author, "User: ",username);
+
+  try{
+    const followsDoc=await insertIntoFollowsTable(username, author);
+    console.log("flowo docnew code",followsDoc,"bw")
+    if(followsDoc==1){
+        res.json({
+        msg:"Followed succesfully",
+        value:followsDoc
+      })
+      console.log(req.body);
+    }
+    else if(followsDoc=='23505'){
+      res.json({
+        msg:"User already follows the author",
+        value:0
+      })
+    }
+
+    
+  }
+  catch(err){
+    res.status(500).json({ error: err.message });
+  }
+  
+})
+
+// check if a user follows a author
+app.get('/checkFollow/:username/:author',async(req,res)=>{
+  const {username,author}=req.params;
+  console.log("Author:  ",author, "User: ",username);
+
+  try{
+    const followsDoc=await checkIfFollow(username, author);
+    console.log("oes follow",followsDoc,"bw")
+    if(followsDoc.rows[0].exists){
+        res.json({
+        msg:"user follows author",
+        value:true
+      })
+      console.log(req.body);
+    }
+    else if(!followsDoc.rows[0].exists){
+      res.json({
+        msg:"User not follows author",
+        value:false
+      })
+    }
+    
+  }
+  catch(err){
+    res.status(500).json({ error: err.message });
+  }
+  
+})
+
+// end point to unfollow the author
+app.delete('/unfollowauthor/:username/:author',async(req,res)=>{
+  const {username,author}=req.params;
+  console.log("Author:  ",author, "User: ",username);
+
+  try{
+    const unfollowDoc=await unfollowAuthor(username, author);
+    console.log("oes follow",unfollowDoc,"bw")
+    if(unfollowDoc==1){
+        res.json({
+        msg:"user unfollowed author",
+        value:true
+      })
+    }
+    else if(unfollowDoc==0){
+      res.json({
+        msg:"User not follows author or error unfollowing",
+        value:false
+      })
+    }
+    
+  }
+  catch(err){
+    res.status(500).json({ error: err.message });
+  }
+  
 })
 
 // Postgress shifting is done 

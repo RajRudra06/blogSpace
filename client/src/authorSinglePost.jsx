@@ -76,9 +76,6 @@ export default function AuthorSinglePost({id,title,summary,cover,content,created
             </div>
             <p className="summary" style={{ fontSize: '20px', fontFamily: 'Poppins, sans-serif', lineHeight: '1.5', color: '#555', fontWeight: '400', letterSpacing: '0.5px' }}>{summary}</p>
 
-
-
-
           </div>
         </div>    
             

@@ -21,11 +21,31 @@ export async function createUsersTable(){
 
     }
     catch(err){
-        console.log("Table not created: ",err);
+        console.log("Users Table not created: ",err);
     }
 
 }
 
+//add constraint to Users table
+export async function addUniqueConstraint(){
+    try {   
+        //await connectDB();
+        console.log("⏳ Adding Constraint Users table...");
+        const res=await pool.query(`
+        ALTER TABLE follows ADD CONSTRAINT unique_follow UNIQUE (username, authorname);
+
+        `)
+
+        console.log("res for unique constint:   ", res, " Table Created Succesfully");
+
+    }
+    catch(err){
+        console.log("constaint nort added  not created: ",err);
+    }
+
+}
+
+//function to create Posts Table
 export async function createPostsTable(){
     try {   
         //await connectDB();
@@ -45,11 +65,66 @@ export async function createPostsTable(){
 
     }
     catch(err){
-        console.log("Table not created: ",err);
+        console.log("Posts Table not created: ",err);
     }
 
 }
 
+//function to create Follows Table
+export async function createFollowsTable(){
+    try{
+        //await connectDB();
+
+        console.log("⏳ Creating Follows table...");
+        const res=await pool.query(`
+        
+        CREATE TABLE IF NOT EXISTS follows (
+            id SERIAL PRIMARY KEY,
+            username VARCHAR(150) NOT NULL,
+            authorname VARCHAR(150) NOT NULL,
+            followed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE,
+            FOREIGN KEY (authorname) REFERENCES users(username) ON DELETE CASCADE,
+            UNIQUE (username, authorname)
+        );
+        `)
+        console.log("Res for creation of follows table:   ", res, " Table Created Succesfully");
+
+    }
+    catch(err){
+        console.log("Follows Table not created: ",err);
+    }
+
+}
+
+// function to insert values in follows table
+export async function insertIntoFollowsTable(username,author){
+    const values=[username,author];
+
+    try {
+        //await connectDB();
+        console.log("⏳ Inserting into Follows table...");
+        const res=await pool.query(`
+            INSERT INTO follows(username,authorname) values(
+                $1,
+                $2
+            ) RETURNING *;
+        `,values)
+
+        if(res.rows.length>0){
+            console.log("✅ Row Insertion Succesfully, Res:    ",res);
+            return res.rows.length;
+        }
+      
+    } catch (error) {
+        if(error.code='23505'){
+            return'23505'
+
+        }
+        console.log("❌ Error inserting:   ",error)
+    }
+
+}
 // function to insert values into posts tables
 export async function insertIntoPostsTable(title,summary,content,author,cover){
     const values=[title,summary,content,author,cover];
@@ -100,6 +175,53 @@ export async function insertIntoUsersTable(username,password,firstname,lastname,
     }
 }
 
+// function to check if a user follows a author
+export async function checkIfFollow(username,author){
+    const values=[username,author];
+
+    try{        
+        //await connectDB();
+        console.log("⏳ Checking follow status...");
+        const res=await pool.query(`
+            SELECT EXISTS (
+                SELECT 1 FROM follows 
+                WHERE username = $1 AND authorname = $2
+            );
+        `,values)
+        return res;
+
+    }
+    catch(err){
+        console.log("❌ Error checking status:   ",err)
+
+    }
+}
+
+// function to unfollow a author
+
+export async function unfollowAuthor(username,author){
+    const values=[username,author];
+    
+    try {
+        console.log("⏳  Unfollowing the author...")
+        const res=await pool.query(`
+            DELETE FROM follows 
+            WHERE username = $1 AND authorname = $2;
+        `,values)
+
+        if(res.rowCount>0){
+            console.log("✅ entry deleted Succesfully, Res:    ",res);
+            return 1;
+        }
+        else if(rowCount==0){
+            return 0
+        }
+    } 
+    catch (error) {
+        console.log("Error unfollowing...", error);
+        return -1;
+    }
+}
 // fetch user details by username
 export async function getUserByUsername(username){
     const values=[username];
@@ -332,3 +454,4 @@ export async function deletePostById(id){
             return isDeleted;
     }   
 }
+
