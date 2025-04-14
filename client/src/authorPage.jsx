@@ -3,6 +3,7 @@ import Header from "./header";
 import { useContext,useEffect, useState } from "react";
 import AuthorSinglePost from "./authorSinglePost.jsx";
 import { UserContext } from "./UserContext";
+import Post from "./post.jsx";
 
 const API_URL=import.meta.env.VITE_API_URL;
 
@@ -93,11 +94,12 @@ export default function AuthorPage(){
         <Header/>
         <div style={{marginTop:'200px', display:'flex', justifyContent:'center', flexDirection:'column', alignItems:'center', color:'gray'}}>All posts by  <p style={{display:'flex', fontStyle:'italic', justifyContent:'center', color:'#444444', fontWeight:'bold', fontSize:'30px'}}> @ {author}</p></div>
         <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-        {isFollowed==null?null:(isFollowed?<button onClick={unfollowAuthor}style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>📌 Following</button>:<button onClick={followAuthor} style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>📌 Follow</button>)}
+        {userInfo.username==author?null: (isFollowed==null?null:(isFollowed?<button onClick={unfollowAuthor}style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>📌 Following</button>:<button onClick={followAuthor} style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>📌 Follow</button>))}
+       
         </div>
         <div style={{marginTop:'30px'}}>
         {authorPosts.length>0 && authorPosts.map(post=>(
-            <AuthorSinglePost key={post._id} {...post}/>
+            <Post key={post._id} {...post}/>
         ))}
         </div>
 

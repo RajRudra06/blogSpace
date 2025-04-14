@@ -18,7 +18,7 @@ import fs from 'fs';
 // imports for postgress
 
 import connectDB from './db_resources/connectDB.js';
-import { unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
+import { getFollowingList,getFollowerList,getFollowingByUsername,getFollowersByUsername,unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
 
 const uploadMiddleware=multer({dest:'uploads/'})
 
@@ -309,6 +309,7 @@ app.put("/updatepost", uploadMiddleware.single('file'), async(req,res)=>{
 
 // Postgress shifting is done 
 app.put("/updateprofile", uploadMiddleware.single('file'), async(req,res)=>{
+  console.log("Update *********************************************************************************************************")
   console.log("received body:: from update");
   console.log(req.body);
   const {id,username,firstName,lastName,email}=req.body;
@@ -392,6 +393,72 @@ app.delete('/delete/:id', async (req,res)=>{
     return res.status(500).json({ msg: "Internal Server Error" })
   }
   
+})
+
+// get followers count 
+app.get('/getfollowers/:username',async(req,res)=>{
+  const {username}=req.params;
+
+  try {
+    const getFollowersDoc=await getFollowersByUsername(username);
+    console.log("follwers DOC",getFollowersDoc);
+    res.json({msg:getFollowersDoc})
+  } 
+  
+  catch (error) {
+    
+  }
+
+})
+
+// get following count  
+app.get('/getfollowing/:username',async(req,res)=>{
+  const {username}=req.params;
+
+  try {
+    const getFollowersDoc=await getFollowingByUsername(username);
+    console.log("following DOC",getFollowersDoc);
+    res.json({msg:getFollowersDoc})
+  } 
+  
+  catch (error) {
+    
+  }
+
+})
+
+// get following list 
+app.get('/getfollowinglist/:username',async(req,res)=>{
+  const {username}=req.params;
+  const followingList=[];
+  try {
+    const getFollowersDoc=await getFollowingList(username);
+    console.log("following list DOC",getFollowersDoc.rows);
+    res.json({msg:getFollowersDoc.rows})
+  } 
+  
+  catch (error) {
+    
+  }
+
+})
+
+// get followers list 
+app.get('/getfollowerslist/:username',async(req,res)=>{
+  const {username}=req.params;
+  const followerList=[];
+
+
+  try {
+    const getFollowersDoc=await getFollowerList(username);
+    console.log("followers list DOC",getFollowersDoc.rows);
+    res.json({msg:getFollowersDoc.rows})
+  } 
+  
+  catch (error) {
+    
+  }
+
 })
 app.listen(3000)
 

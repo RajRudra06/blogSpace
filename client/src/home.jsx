@@ -11,7 +11,6 @@ export default function Home(){
     useEffect(() => {
         setPostInfoContext(null);
     }, []);
-    //console.log("popoppoppopperererererere"+postInfoContext)
     return(
     <main>
         <Header />

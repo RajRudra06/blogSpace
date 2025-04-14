@@ -97,6 +97,96 @@ export async function createFollowsTable(){
 
 }
 
+//function to get the followers of a user
+
+export async function getFollowersByUsername(username){
+    const values=[username];
+    try {
+        //awit connectDB();
+
+        console.log("⏳ Getting all the followers");
+        const res=await pool.query(`
+        SELECT COUNT(*) AS follower_count
+        FROM follows
+        WHERE authorname = $1;
+        `,values)
+
+        console.log("Res for the number of followers is:", res, " Fetched suucesfully...")
+        return res.rows[0];
+
+
+    } catch (err) {
+        console.log("Problem getting number of users:   ",err);
+    }
+}
+
+//get following for author from username 
+
+export async function getFollowingByUsername(username){
+    const values=[username];
+    try {
+        //awit connectDB();
+
+        console.log("⏳ Getting all the following");
+        const res=await pool.query(`
+        SELECT COUNT(*) AS follower_count
+        FROM follows
+        WHERE username = $1;
+        `,values)
+
+        console.log("Res for the number of followers is:", res, " Fetched suucesfully...")
+        return res.rows[0];
+
+
+    } catch (err) {
+        console.log("Problem getting number of users:   ",err);
+    }
+}
+
+// get following list by username 
+export async function getFollowingList(username){
+    const values=[username];
+    try {
+        //awit connectDB();
+
+        console.log("⏳ Getting all the following");
+        const res=await pool.query(`
+        SELECT authorname AS Following_list
+        FROM follows WHERE username = $1;
+        `,values)
+
+        console.log("Res for the list of following is:", res, " Fetched list sucesfully...")
+        return res;
+
+
+    } catch (err) {
+        console.log("Problem getting list of following:   ",err);
+    }
+}
+
+//get follower list
+export async function getFollowerList(username){
+    const values=[username];
+    try {
+        //awit connectDB();
+
+        console.log("⏳ Getting all the following");
+        const res=await pool.query(`
+        SELECT username AS Follower_List
+        FROM follows WHERE authorname = $1;
+
+        `,values)
+
+        console.log("Res for the list of follower is:", res, " Fetched list suucesfully...")
+        return res;
+
+
+    } catch (err) {
+        console.log("Problem getting list of follower:   ",err);
+    }
+}
+
+
 // function to insert values in follows table
 export async function insertIntoFollowsTable(username,author){
     const values=[username,author];

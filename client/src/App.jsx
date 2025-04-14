@@ -15,6 +15,7 @@ import SinglePostPage from './pages/singlePostPage'
 import { PostContextProvider } from './postContext'
 import UserProfile from './UserProfile'
 import AuthorPage from './authorPage'
+import { IsInContextProvider } from './LoginContext'
 
 "After git push"
 
@@ -23,6 +24,7 @@ function App() {
   return (
     <UserContextProvider>
       <PostContextProvider>
+      <IsInContextProvider>
       <Routes>
         {/* mention path/url for the page in path attribute and element will have the content in it */}
         {/* this is defining of route */}
@@ -36,6 +38,7 @@ function App() {
           <Route path="/userprofile" element={<UserProfile/>}></Route>
           <Route path="/authorpage/:author" element={<AuthorPage/>}></Route>
       </Routes>
+      </IsInContextProvider>
       </PostContextProvider>
     </UserContextProvider>
   )

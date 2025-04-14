@@ -3,6 +3,7 @@ import './App.css'
 import { useContext, useState } from "react"
 import { Navigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
+import { IsInContext } from "./LoginContext";
 
 const API_URL=import.meta.env.VITE_API_URL;
 
@@ -12,6 +13,7 @@ export default function Login(){
     const [redirect,setRedirect]=useState(false);
     const {setUserInfo,userInfo}=useContext(UserContext);
     const [isClickedOnce,setIsClickedOnce]=useState(false);
+    const {isIn,setIsIn}=useContext(IsInContext);
 
     async function login(ev){
         setIsClickedOnce(true);
@@ -34,6 +36,7 @@ export default function Login(){
                 console.log("Render USERINFO ",userInfo);
                 alert('Login Successful !!!');
                 setRedirect(true);
+                setIsIn(true)
                 console.log("renderer::::",userInfo)
             } else {
                 alert('Login Unsuccessful, check your details - ' + msgBackend.msg);
