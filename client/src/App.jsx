@@ -16,6 +16,7 @@ import { PostContextProvider } from './postContext'
 import UserProfile from './UserProfile'
 import AuthorPage from './authorPage'
 import { IsInContextProvider } from './LoginContext'
+import FollowingPost from './followedPost'
 
 "After git push"
 
@@ -30,6 +31,7 @@ function App() {
         {/* this is defining of route */}
 
           <Route path="/" element={<Home/>}/>
+          <Route path="/followingposts" element={<FollowingPost/>}></Route>
           <Route path={"/login"} element={<Login/>} />
           <Route path={"/register"} element={<Register/>}/>
           <Route path={"/create"} element={<Create/>}></Route>

@@ -18,7 +18,7 @@ import fs from 'fs';
 // imports for postgress
 
 import connectDB from './db_resources/connectDB.js';
-import { getPostCountByAuthor,insertIntoCommentsTable,getAllComments,checkIfLiked,deleteFromLikesTable,insertIntoLikesTable,getFollowingList,getFollowerList,getFollowingByUsername,getFollowersByUsername,unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
+import { getFollowedPosts,getPostCountByAuthor,insertIntoCommentsTable,getAllComments,checkIfLiked,deleteFromLikesTable,insertIntoLikesTable,getFollowingList,getFollowerList,getFollowingByUsername,getFollowersByUsername,unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
 
 const uploadMiddleware=multer({dest:'uploads/'})
 
@@ -589,6 +589,20 @@ app.get('/postcount/:author', async (req, res) => {
     res.json({ postCount });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch post count' });
+  }
+});
+
+// get all post by a followed author 
+app.get('/followedposts/:username', async (req, res) => {
+  const { username } = req.params;
+  console.log("🔍 Fetching posts followed by:", username);
+
+  try {
+    const followedPosts = await getFollowedPosts(username);
+    res.json(followedPosts);
+  } catch (err) {
+    console.error("❌ Error fetching followed posts:", err);
+    res.status(500).json({ error: "Failed to fetch followed posts" });
   }
 });
 

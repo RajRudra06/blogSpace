@@ -38,7 +38,36 @@ export async function getPostCountByAuthor(author) {
       console.error('Error fetching post count by author:', err);
       throw err;
     }
+}
+
+// function to get followed post
+export async function getFollowedPosts(username) {
+    const values = [username];
+    try {
+      console.log("⏳ Fetching posts from followed authors (using nested subquery)...");
+      
+      const res = await pool.query(
+        `
+        SELECT *
+        FROM posts
+        WHERE author IN (
+          SELECT authorname
+          FROM follows
+          WHERE username = $1
+        )
+        ORDER BY created_at DESC;
+        `,
+        values);
+  
+      console.log(" Followed posts fetched:", res.rows);
+      return res.rows;
+    } catch (err) {
+      console.log(" Error fetching followed posts: ", err);
+      return [];
+    }
   }
+
+
 
 // function to create users table
 export async function createUsersTable(){

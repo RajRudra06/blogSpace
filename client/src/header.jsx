@@ -80,9 +80,13 @@ export default function Header(){
               <Link to="/userprofile" style={{ color: '#555',
                 textDecoration: 'none',
                 fontWeight: '500',
-                transition: 'color 0.2s ease'}} >My Profile <p style={{fontWeight:'bold', display:'inline'}}>
+                transition: 'color 0.2s ease'}} >My Profile 
+                {/* <p style={{fontWeight:'bold', display:'inline'}}>
                 ({userInfo.username})
-              </p></Link>
+              </p> */}
+              </Link>
+
+              <Link  to="/followingposts">Following Posts</Link>
               <Link to="/" onClick={logout} style={{ cursor: 'pointer', color: '#e74c3c'}}>Logout</Link>
             </>
           ) : (
