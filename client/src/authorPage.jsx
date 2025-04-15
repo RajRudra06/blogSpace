@@ -102,13 +102,15 @@ export default function AuthorPage(){
             console.log("error unfollowing...", err);
         }
     }
-    
+    console.log("inofofofoofofof:",userInfo)
     return(
         <>
         <Header/>
         <div style={{marginTop:'200px', display:'flex', justifyContent:'center', flexDirection:'column', alignItems:'center', color:'gray'}}>All posts by  <p style={{display:'flex', fontStyle:'italic', justifyContent:'center', color:'#444444', fontWeight:'bold', fontSize:'30px'}}> @ {author}</p></div>
         <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-        {userInfo.username==author?null: (isFollowed==null?null:(isFollowed?<button onClick={unfollowAuthor}style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>📌 Following</button>:<button onClick={followAuthor} style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>📌 Follow</button>))}
+        
+        {userInfo.username==null?null:(userInfo.username==author?null: (isFollowed==null?null:(isFollowed?<button onClick={unfollowAuthor}style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>📌 Following</button>:<button onClick={followAuthor} style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>📌 Follow</button>)))}
+        
         
         
         </div>

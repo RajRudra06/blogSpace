@@ -17,6 +17,7 @@ import UserProfile from './UserProfile'
 import AuthorPage from './authorPage'
 import { IsInContextProvider } from './LoginContext'
 import FollowingPost from './followedPost'
+import TrendingAuthor from './trendingAuthors'
 
 "After git push"
 
@@ -32,6 +33,7 @@ function App() {
 
           <Route path="/" element={<Home/>}/>
           <Route path="/followingposts" element={<FollowingPost/>}></Route>
+          <Route path="/trendingauthor" element={<TrendingAuthor/>}></Route>
           <Route path={"/login"} element={<Login/>} />
           <Route path={"/register"} element={<Register/>}/>
           <Route path={"/create"} element={<Create/>}></Route>

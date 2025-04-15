@@ -21,6 +21,7 @@ export default function SinglePostPage(){
     const {setUserInfo,userInfo}=useContext(UserContext);
     const [isClickedOnce,setIsClickedOnce]=useState(false);
     const [isLiked,setIsLiked]=useState(null);
+    const [numberOfLike,setNumberOfLike]=useState(0)
 
 
     //runs when component mounts
@@ -33,6 +34,8 @@ export default function SinglePostPage(){
 
                 })
             }).catch(error=>setError("Server Down, try again later..."));
+
+            
 
         
     },[])
@@ -64,6 +67,25 @@ export default function SinglePostPage(){
      
     }, [postInfo, userInfo]);
 
+    useEffect(()=>{
+        async function getNumberOfLikes(){
+            console.log("inside getNubmber of likes")
+            try {
+                console.log("inside getNubmber of likes try")
+
+                const response = await fetch(`${API_URL}/likescount/${postInfo.id}`);
+                const msg = await response.json();
+                console.log("LIKKKKKKK:",msg.likeCount)
+                setNumberOfLike(msg.likeCount)
+                
+            } catch (error) {
+                
+            }
+        }
+
+        getNumberOfLikes()
+    },[postInfo])
+
     async function likePost(){
         console.log("liking....");
         try{
@@ -82,6 +104,19 @@ export default function SinglePostPage(){
                 alert("Error liking the post")
             }
             console.log("like reply:",res)
+
+            async function getNumberOfLikes(){
+                try {
+                    const response = await fetch(`${API_URL}/likescount/${postInfo.id}`);
+                    const msg = await response.json();
+                    setNumberOfLike(msg.likeCount)
+                    
+                } catch (error) {
+                    
+                }
+            }
+
+            getNumberOfLikes()
             
         }
         catch(err){
@@ -108,6 +143,19 @@ export default function SinglePostPage(){
             }
 
             console.log("unlike reply:",res)
+
+            async function getNumberOfLikes(){
+                try {
+                    const response = await fetch(`${API_URL}/likescount/${postInfo.id}`);
+                    const msg = await response.json();
+                    setNumberOfLike(msg.likeCount)
+                    
+                } catch (error) {
+                    
+                }
+            }
+
+            getNumberOfLikes()
            
             
         }
@@ -192,7 +240,7 @@ export default function SinglePostPage(){
                         </div>
 
                         <div>
-                            {userInfo.username==postInfo.author?null:(userInfo.username==null?null:(isLiked==null?null:<>{isLiked?<button onClick={unlikePost} style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>❤️ Liked</button>: <button onClick={likePost} style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>❤️ Like</button>}
+                            {userInfo.username==postInfo.author?null:(userInfo.username==null?null:(isLiked==null?null:<>{isLiked?<button onClick={unlikePost} style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>❤️ Liked {numberOfLike}</button>: <button onClick={likePost} style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>❤️ Like {numberOfLike}</button>}
                             
                             </>))}
                         

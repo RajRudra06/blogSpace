@@ -18,7 +18,7 @@ import fs from 'fs';
 // imports for postgress
 
 import connectDB from './db_resources/connectDB.js';
-import { getFollowedPosts,getPostCountByAuthor,insertIntoCommentsTable,getAllComments,checkIfLiked,deleteFromLikesTable,insertIntoLikesTable,getFollowingList,getFollowerList,getFollowingByUsername,getFollowersByUsername,unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
+import { getLikeCount,getTopAuthors,getFollowedPosts,getPostCountByAuthor,insertIntoCommentsTable,getAllComments,checkIfLiked,deleteFromLikesTable,insertIntoLikesTable,getFollowingList,getFollowerList,getFollowingByUsername,getFollowersByUsername,unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
 
 const uploadMiddleware=multer({dest:'uploads/'})
 
@@ -577,10 +577,7 @@ app.post("/postcomments",async(req,res)=>{
 
 })
 
-// get total number of post by a author
-
-//createGetPostCountFunction();
-
+// get total number of post by a author plsql
 app.get('/postcount/:author', async (req, res) => {
   const { author } = req.params;
   
@@ -592,7 +589,7 @@ app.get('/postcount/:author', async (req, res) => {
   }
 });
 
-// get all post by a followed author 
+// get all post by a followed author nested
 app.get('/followedposts/:username', async (req, res) => {
   const { username } = req.params;
   console.log("🔍 Fetching posts followed by:", username);
@@ -601,9 +598,27 @@ app.get('/followedposts/:username', async (req, res) => {
     const followedPosts = await getFollowedPosts(username);
     res.json(followedPosts);
   } catch (err) {
-    console.error("❌ Error fetching followed posts:", err);
+    console.error(" Error fetching followed posts:", err);
     res.status(500).json({ error: "Failed to fetch followed posts" });
   }
+});
+
+// to get top authors trending ones nested query
+app.get('/topauthors', async (req, res) => {
+  try {
+    const topAuthors = await getTopAuthors(); 
+    res.json(topAuthors);
+  } catch (err) {
+    console.error("Error fetching top authors:", err);
+    res.status(500).json({ error: "Failed to fetch top authors" });
+  }
+});
+
+// get number of likes plsql
+app.get('/likescount/:postId', async (req, res) => {
+  const {postId} = req.params;
+  const count = await getLikeCount(postId);
+  res.json({ postId, likeCount: count });
 });
 
 app.listen(3000)

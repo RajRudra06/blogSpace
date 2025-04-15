@@ -61,7 +61,7 @@ export default function Header(){
     return(
       <div className="header" style={headerStyle}>
         <div className="headerMain">
-      <header className="helloHeader">
+      <header className="helloHeader" style={{maxWidth:'1200px',width:'100%'}}>
         <Link to="/" className="logo" style={{
     fontSize: '1.5rem',
     fontWeight: 'bold',
@@ -71,6 +71,15 @@ export default function Header(){
         <nav>
           {isIn ? (username ? (
             <>
+
+            <Link to="/trendingauthor" style={{
+                color: '#555',
+                textDecoration: 'none',
+                fontWeight: '500',
+                transition: 'color 0.2s ease'
+              }}>Trending Authors</Link>
+
+
               <Link to="/create" style={{
                 color: '#555',
                 textDecoration: 'none',
@@ -81,9 +90,9 @@ export default function Header(){
                 textDecoration: 'none',
                 fontWeight: '500',
                 transition: 'color 0.2s ease'}} >My Profile 
-                {/* <p style={{fontWeight:'bold', display:'inline'}}>
+                <p style={{fontWeight:'bold', display:'inline'}}>
                 ({userInfo.username})
-              </p> */}
+              </p>
               </Link>
 
               <Link  to="/followingposts">Following Posts</Link>

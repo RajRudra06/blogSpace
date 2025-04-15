@@ -67,6 +67,65 @@ export async function getFollowedPosts(username) {
     }
   }
 
+// function to trending authors nested query
+export async function getTopAuthors() {
+    try {
+      console.log("⏳ Getting top author(s)...");
+  
+      const res = await pool.query(`
+        SELECT 
+           u.username,
+           u.firstname,
+           u.lastname,
+           (SELECT COUNT(*) FROM posts p WHERE p.author = u.username) AS post_count
+        FROM users u
+        WHERE (SELECT COUNT(*) FROM posts p WHERE p.author = u.username) > 0  -- This ensures we only include authors who have posts
+        ORDER BY post_count DESC;
+      `);
+  
+      console.log("Top author(s):", res.rows);
+      return res.rows;
+    } catch (err) {
+      console.error("Error fetching top author(s):", err);
+      return [];
+    }
+  }
+
+//get count of likes plsql
+
+export async function defineGetLikeCount(){
+    const query = `
+      CREATE OR REPLACE FUNCTION getLike_count(post_id_input INTEGER)
+      RETURNS INTEGER AS $$
+      DECLARE
+          like_count INTEGER;
+      BEGIN
+          SELECT COUNT(*) INTO like_count FROM likes WHERE post_id = post_id_input;
+          RETURN like_count;
+      END;
+      $$ LANGUAGE plpgsql;
+    `;
+  
+    try {
+      await pool.query(query);
+      console.log("✅ PostgreSQL function 'get_like_count' created/updated successfully.");
+    } catch (err) {
+      console.error("❌ Error creating 'get_like_count' function:", err.message);
+    }
+  };
+
+
+  //calling of plsql
+export async function  getLikeCount(postId){
+defineGetLikeCount();
+        try {
+            const result = await pool.query(`SELECT getLike_count($1) AS count`, [parseInt(postId)]);
+            return result.rows[0].count;
+        } catch (err) {
+            console.error("❌ Error fetching like count:", err.message);
+            return null;
+        }
+};
 
 
 // function to create users table
