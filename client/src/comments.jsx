@@ -15,6 +15,7 @@ export default function CommentSection({ post_id,PostContext,UserContext }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [noComments, setNoComments]=useState(null);
+  const [isCommented,setIsCommented]=useState(false);
 
   useEffect(() => {
     fetchComments();
@@ -75,7 +76,7 @@ export default function CommentSection({ post_id,PostContext,UserContext }) {
       
       if(data.commentInserted){
         setNewComment('');
-        fetchComments(); // Refresh comments after adding a new one
+        fetchComments(); 
         alert("Comment Inserted")
 
       }
@@ -84,7 +85,7 @@ export default function CommentSection({ post_id,PostContext,UserContext }) {
         setError('Failed to add comment');
       }
        else {
-        //setError('Failed to add comment');
+        setError('Failed to add comment');
       }
     } 
     

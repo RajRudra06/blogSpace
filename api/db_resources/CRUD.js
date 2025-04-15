@@ -1,6 +1,45 @@
 import connectDB from "./connectDB.js";
 import { pool } from "./connectDB.js";
 
+
+
+// plsql func returns total number of post by author
+
+// Function to create the PL/pgSQL function for counting posts by author
+export async function createGetPostCountFunction() {
+    const createFunctionQuery = `
+      CREATE OR REPLACE FUNCTION get_post_count_by_author(author_username TEXT)
+      RETURNS INT AS $$
+      BEGIN
+        RETURN (SELECT COUNT(*) FROM posts WHERE author = author_username);
+      END;
+      $$ LANGUAGE plpgsql;
+    `;
+  
+    try {
+      // Execute the function creation query
+      await pool.query(createFunctionQuery);
+      console.log('PL/pgSQL function created successfully.');
+    } catch (err) {
+      console.error('Error creating PL/pgSQL function:', err);
+      throw err;
+    }
+  }
+
+
+// Function to get the post count by author from the database using the function
+export async function getPostCountByAuthor(author) {
+    createGetPostCountFunction()
+    const values=[author]
+    try {
+      const result = await pool.query('SELECT get_post_count_by_author($1) AS post_count', values);
+      return result.rows[0].post_count; 
+    } catch (err) {
+      console.error('Error fetching post count by author:', err);
+      throw err;
+    }
+  }
+
 // function to create users table
 export async function createUsersTable(){
     try {   
