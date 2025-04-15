@@ -97,6 +97,91 @@ export async function createFollowsTable(){
 
 }
 
+// function to create comment Table
+
+export async function createCommentTable(){
+    try{
+        console.log("⏳ Creating Comment table...");
+        const res=await pool.query(`
+        CREATE TABLE IF NOT EXISTS comments (
+            comment_id SERIAL PRIMARY KEY,
+            post_id INTEGER NOT NULL,
+            username VARCHAR(30) NOT NULL,
+            comment_text VARCHAR(300) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        
+            CONSTRAINT fk_post
+                FOREIGN KEY (post_id)
+                REFERENCES posts(id)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE,
+        
+            CONSTRAINT fk_user
+                FOREIGN KEY (username)
+                REFERENCES users(username)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE
+        );
+        
+        `)
+    }
+    catch(err){
+
+    }
+} 
+
+//function to insert into table
+export async function insertIntoCommentsTable(post_id,username,comment){
+    const values=[post_id,username,comment]
+    try {
+        const res = await pool.query(`
+          INSERT INTO comments (post_id, username, comment_text, created_at)
+          VALUES ($1, $2, $3, DEFAULT)
+          RETURNING *;
+        `, values);
+    
+        if (res.rowCount > 0) {
+          console.log("✅ Comment inserted:", res);
+          return 1;
+        }
+        else{
+            console.log("✅ Comment not inserted:", res);
+            return 0;
+        }
+      } 
+      catch (error) {
+        console.error("❌ Error inserting comment:", error);
+        return -1;
+      }
+}
+
+//function to get all comments
+export async function getAllComments(post_id){
+    const values=[post_id];
+    try {
+        console.log("⏳ Getting all comments...");
+
+        const res = await pool.query(`SELECT * FROM comments
+                WHERE post_id = $1
+                ORDER BY created_at ASC;
+        `,values);
+
+        console.log("✅ Comments fetched: ", res);
+
+        return res.rows;
+
+    } catch (error) {
+        console.log("❌ Error fetching comments: ", err);
+        return [];
+    }
+}
+
+async function getComment(){
+    const resp=await getAllComments(34);
+    console.log("monkey:",resp);
+}
+
+getComment();
 //function to create like table
 export async function createLikeTable(){
     try{

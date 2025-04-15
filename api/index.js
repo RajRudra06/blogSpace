@@ -18,7 +18,7 @@ import fs from 'fs';
 // imports for postgress
 
 import connectDB from './db_resources/connectDB.js';
-import { checkIfLiked,deleteFromLikesTable,insertIntoLikesTable,getFollowingList,getFollowerList,getFollowingByUsername,getFollowersByUsername,unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
+import { insertIntoCommentsTable,getAllComments,checkIfLiked,deleteFromLikesTable,insertIntoLikesTable,getFollowingList,getFollowerList,getFollowingByUsername,getFollowersByUsername,unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
 
 const uploadMiddleware=multer({dest:'uploads/'})
 
@@ -525,6 +525,56 @@ app.get('/checkifliked/:post_id/:username',async (req,res)=>{
     console.log("Error unliking post",err);
     res.json({msg:err})
   }
+})
+
+app.get("/comments/:post_id",async(req,res)=>{
+    const {post_id}=req.params;
+
+    const comments=await getAllComments(post_id)
+    console.log("POPPER LOG:",comments);
+    try {
+      if(comments.length>0){
+        res.json({comments:comments,gotComments:true,number:comments.length})
+  
+      }
+      else{
+        res.json({comments:comments,gotComments:false,number:0})
+  
+      }
+      console.log("all comments:  ",comments.rows)
+    } catch (error) {
+      console.log("Error getting all comments",error);
+      res.json({msg:error,gotComments:false})
+
+    }
+  
+})
+
+//post a comment
+app.post("/postcomments",async(req,res)=>{
+
+  try {
+    const {post_id,username,content}=req.body;
+
+    const comments=await insertIntoCommentsTable(post_id,username,content)
+
+    if(comments==1){
+      res.json({commentInserted:true})
+    }
+    else if(comments==0){
+      res.json({commentInserted:false})
+
+    }
+    else{
+      res.json({commentInserted:false,msg:comments})
+
+    }
+
+  } catch (error) {
+    console.log("Error:",error);
+    res.json({msg:error,commentInserted:false})
+  }
+
 })
 
 app.listen(3000)
