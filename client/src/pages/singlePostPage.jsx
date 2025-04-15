@@ -160,18 +160,101 @@ export default function SinglePostPage(){
     const [error,setError]=useState('');
     const {setUserInfo,userInfo}=useContext(UserContext);
     const [isClickedOnce,setIsClickedOnce]=useState(false);
+    const [isLiked,setIsLiked]=useState(null);
+
 
     //runs when component mounts
     useEffect(()=>{
+
             fetch(`${API_URL}/post/${id}`)
             .then(response=>{
                 response.json().then(postInfo=>{
                     setPostInfo(postInfo);
 
                 })
-            }).catch(error=>setError("Server Down, try again later..."))
-          
+            }).catch(error=>setError("Server Down, try again later..."));
+
+        
     },[])
+
+    useEffect(() => {
+        if (!postInfo || !userInfo || !userInfo.username) return;
+        if(userInfo.username!=postInfo.author){
+            async function checkIfLiked() {
+                console.log("Checking if post is liked...");
+        
+                try {
+                    const response = await fetch(`${API_URL}/checkifliked/${postInfo.id}/${userInfo.username}`);
+                    const msg = await response.json();
+                    console.log("Does like:", msg);
+                    
+                    if(msg.userLikedStatus){
+                        setIsLiked(true);
+                    }
+                    else if(!msg.userLikedStatus){
+                        setIsLiked(false)
+                    }
+                } catch (error) {
+                    console.error("Error checking like status:", error);
+                }
+            }
+        
+            checkIfLiked();
+        }
+     
+    }, [postInfo, userInfo]);
+
+    async function likePost(){
+        console.log("liking....");
+        try{
+            const response=await fetch(`${API_URL}/likepost`,{
+                method:'POST',
+                headers:{
+                'Content-Type':'application/json'
+            },
+                body:JSON.stringify({post_id:postInfo.id,username:userInfo.username}),
+            })
+            const res=await response.json();
+            if(res.likeStatus){
+                setIsLiked(true);
+            }
+            else{
+                alert("Error liking the post")
+            }
+            console.log("like reply:",res)
+            
+        }
+        catch(err){
+            console.log("error liking...", err);
+        }
+    }
+
+    async function unlikePost(){
+        console.log("unliking....");
+        try{
+            const response=await fetch(`${API_URL}/unlikepost`,{
+                method:'POST',
+                headers:{
+                'Content-Type':'application/json'
+            },
+                body:JSON.stringify({post_id:postInfo.id,username:userInfo.username}),
+            })
+            const res=await response.json();
+            if(res.unlikeStatus){
+                setIsLiked(false);
+            }
+            else{
+                alert("Error unliking the post")
+            }
+
+            console.log("unlike reply:",res)
+           
+            
+        }
+        catch(err){
+            console.log("error liking...", err);
+        }
+    }
     
     function setPostContext(){
         setPostInfoContext(postInfo);
@@ -208,7 +291,6 @@ export default function SinglePostPage(){
     }
 
     console.log(postInfo?.content);
-    console.log("daterrr:",postInfo)
 
     const datemain=postInfo.created_at;
 
@@ -247,6 +329,14 @@ export default function SinglePostPage(){
                             <Link to={`/authorpage/${postInfo.author}`} className="authorLink">
                                 @{postInfo.author}
                             </Link>
+                        </div>
+
+                        <div>
+                            {userInfo.username==postInfo.author?null:(userInfo.username==null?null:(isLiked==null?null:<>{isLiked?<button onClick={unlikePost} style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>❤️ Liked</button>: <button onClick={likePost} style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>❤️ Like</button>}
+                            
+                            </>))}
+                        
+                        
                         </div>
                     </div>
 

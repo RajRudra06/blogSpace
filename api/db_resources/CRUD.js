@@ -97,8 +97,132 @@ export async function createFollowsTable(){
 
 }
 
-//function to get the followers of a user
+//function to create like table
+export async function createLikeTable(){
+    try{
+        //await connectDB();
 
+        console.log("⏳ Creating Like table...");
+        const res=await pool.query(`
+        
+        CREATE TABLE IF NOT EXISTS likes (
+            like_id SERIAL PRIMARY KEY,
+            username VARCHAR(150) NOT NULL,
+            post_id INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            
+            CONSTRAINT fk_user
+                FOREIGN KEY (username)
+                REFERENCES users(username)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE,
+        
+            CONSTRAINT fk_post
+                FOREIGN KEY (post_id)
+                REFERENCES posts(id)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE,
+        
+            CONSTRAINT unique_like
+                UNIQUE (username, post_id)
+        );
+        
+        `)
+        console.log("Res for creation of like table:   ", res, " Table Created Succesfully");
+
+    }
+    catch(err){
+        console.log("Like Table not created: ",err);
+    }
+
+}
+
+//function to insert into like table
+export async function insertIntoLikesTable(username,post_id){
+    const values=[username,post_id];
+
+    try {
+        //await connectDB();
+        console.log("⏳ Inserting into Like table...");
+        const res=await pool.query(`
+            INSERT INTO likes(username,post_id,created_at) values(
+                $1,
+                $2,
+                DEFAULT
+            ) RETURNING *;
+        `,values)
+
+        if(res.rowCount>0){
+            console.log("✅ Row Insertion Succesfully, Res:    ",res);
+            return 1;
+        }
+        else{
+            return 0;
+        }
+      
+    } catch (error) {
+        console.log("❌ Error inserting in like table:   ",error)
+        return -1;
+    }
+
+}
+
+//function to delete from the likes table
+export async function deleteFromLikesTable(username,post_id){
+    const values=[username,post_id];
+
+    try {
+        //await connectDB();
+        console.log("⏳ Deleting into Like table...");
+        const res=await pool.query(`
+            DELETE FROM likes
+            WHERE username = $1 AND post_id = $2;        
+        `,values)
+
+        if(res.rowCount>0){
+            console.log("✅ Row Deletion Succesfully, Res:    ",res);
+            return 1;
+        }
+        else{
+            return 0;
+        }
+      
+    } catch (error) {
+        console.log("❌ Error deleting in like table:   ",error)
+        return -1;
+    }
+
+}
+
+//function to check if a post liked by a user
+export async function checkIfLiked(username,post_id){
+    const values=[username,post_id];
+
+    try {
+        //await connectDB();
+        console.log("⏳ Checking from Like table...");
+        const res=await pool.query(`
+                SELECT * FROM likes
+                WHERE username = $1 AND post_id = $2;
+        `,values)
+
+        if(res.rowCount>0){
+            console.log("Post liked by the user...",res);
+            return 1;
+        }
+        else{
+            console.log("Post may not be liked by the user...",res);
+            return 0;
+        }
+    } catch (error) {
+        console.log("❌ Error checking from like table:   ",error)
+        return -1;
+    }
+
+}
+
+
+//function to get the followers of a user
 export async function getFollowersByUsername(username){
     const values=[username];
     try {
@@ -207,7 +331,7 @@ export async function insertIntoFollowsTable(username,author){
         }
       
     } catch (error) {
-        if(error.code='23505'){
+        if(error.code=='23505'){
             return'23505'
 
         }

@@ -18,7 +18,7 @@ import fs from 'fs';
 // imports for postgress
 
 import connectDB from './db_resources/connectDB.js';
-import { getFollowingList,getFollowerList,getFollowingByUsername,getFollowersByUsername,unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
+import { checkIfLiked,deleteFromLikesTable,insertIntoLikesTable,getFollowingList,getFollowerList,getFollowingByUsername,getFollowersByUsername,unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
 
 const uploadMiddleware=multer({dest:'uploads/'})
 
@@ -460,5 +460,72 @@ app.get('/getfollowerslist/:username',async(req,res)=>{
   }
 
 })
+
+// like a post 
+app.post('/likepost',async (req,res)=>{
+
+  const {post_id,username}=req.body;
+  try {
+    const response=await insertIntoLikesTable(username,post_id);
+
+    if(response==1){
+      res.json({msg:"Post Liked...",likeStatus:true});
+    }
+    else{
+      res.json({msg:"Post not Liked...",likeStatus:false});
+
+    }
+  }
+  catch(err){
+    console.log("Error liking post",err);
+    res.json({msg:err})
+  }
+
+})
+
+// unlike a post 
+app.post('/unlikepost',async (req,res)=>{
+
+  const {post_id,username}=req.body;
+  try {
+    const response=await deleteFromLikesTable(username,post_id);
+
+    if(response==1){
+      res.json({msg:"Post unliked...",unlikeStatus:true});
+    }
+    else{
+      res.json({msg:"Post not unliked...",unlikeStatus:false});
+
+    }
+  }
+  catch(err){
+    console.log("Error unliking post",err);
+    res.json({msg:err})
+  }
+})
+
+app.get('/checkifliked/:post_id/:username',async (req,res)=>{
+
+  const {post_id,username}=req.params;
+  try {
+    const response=await checkIfLiked(username,post_id);
+
+    if(response==1){
+      res.json({msg:"Post checked for like...",userLikedStatus:true});
+    }
+    else if(response==0){
+      res.json({msg:"Post may checked for like...",userLikedStatus:false});
+    }
+    else if(response==-1){
+      res.json({msg:"Post can't be checked for like..."});
+
+    }
+  }
+  catch(err){
+    console.log("Error unliking post",err);
+    res.json({msg:err})
+  }
+})
+
 app.listen(3000)
 
