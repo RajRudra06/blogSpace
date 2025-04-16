@@ -1,6 +1,3 @@
-// // ************first GEN************
-
-
 import {Link} from "react-router-dom"
 import './App.css'
 import { useContext, useEffect, useState } from "react"
@@ -15,8 +12,9 @@ const API_URL=import.meta.env.VITE_API_URL;
 export default function Header(){
   const {setUserInfo,userInfo}=useContext(UserContext)
   const {isIn,setIsIn}=useContext(IsInContext);
-  // const [redirect,setRedirect]=useState(false)
   const navigate = useNavigate();
+  const [loading,setLoading]=useState(false);
+  const username=userInfo?.username
 
 
   useEffect(()=>{
@@ -24,11 +22,13 @@ export default function Header(){
         credentials:'include',
       }).then(response=>{
         response.json().then(userInfo=>{
+            setLoading(true)
             setUserInfo(userInfo)
+            console.log("jasbhb",userInfo)
         })
       })
      
-  },[])
+  },[username])
 
   function logout(){
     fetch(`${API_URL}/logout`,{
@@ -41,7 +41,6 @@ export default function Header(){
   
   }
 
-  const username=userInfo?.username
 
   const headerStyle = {
     position: 'sticky',    
@@ -67,7 +66,7 @@ export default function Header(){
     textDecoration: 'none'
   }}>Blog Space</Link>
         <nav>
-          {isIn ? (username ? (
+          {isIn ? (loading ? (
             <>
 
             <Link to="/trendingauthor" style={{
@@ -89,7 +88,7 @@ export default function Header(){
                 fontWeight: '500',
                 transition: 'color 0.2s ease'}} >My Profile 
                 <p style={{fontWeight:'bold', display:'inline'}}>
-                ({userInfo.username})
+                {userInfo?.username ? `(${userInfo.username})` : ''}
               </p>
               </Link>
 
