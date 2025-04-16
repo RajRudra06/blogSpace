@@ -25,7 +25,17 @@ const uploadMiddleware=multer({dest:'uploads/'})
 const saltKey=bcrypt.genSaltSync(10);
 const jwtSecret='jhasbvdjhfbjhsbdkfnksad872y3rkjl'
 
-app.use(cors({credentials:true, origin:['http://localhost:5173','https://blog-space-alpha.vercel.app/'],methods:['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],allowedHeaders:['Content-Type','Authorization']}));
+// app.use(cors({credentials:true, origin:['http://localhost:5173','https://blog-space-alpha.vercel.app/','https://blog-space-git-main-rajrudra06s-projects.vercel.app/'],methods:['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],allowedHeaders:['Content-Type','Authorization']}));
+app.use(cors({
+  credentials: true, 
+  origin: [
+    'http://localhost:5173',
+    'https://blog-space-alpha.vercel.app',
+    'https://blog-space-git-main-rajrudra06s-projects.vercel.app'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
+}));
 app.use(json());
 // makes the cookie available in req.cookies.token which will be send by the POST/GET request
 app.use(cookieParser())
@@ -71,8 +81,8 @@ app.post("/login",async(req,res)=>{
             if(err) throw err;
             res.cookie('token', token,{
               httpOnly:true,
-              sameSite:process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-              secure: process.env.NODE_ENV === 'production',
+              sameSite:'none',
+              secure: true,
               maxAge:30*24*60*60*1000
             }).json({
               id:existingUser.id,
@@ -137,7 +147,8 @@ app.get('/posts',async (req,res)=>{
 app.post('/logout',(req,res)=>{
   res.cookie('token', '',{
     httpOnly:true,
-    sameSite:'lax',
+    sameSite:'none',
+    secure:true,
     expires: new Date(0)
   }).json('ok')
 })
