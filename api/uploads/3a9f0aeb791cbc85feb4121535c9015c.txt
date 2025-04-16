@@ -1,0 +1,100 @@
+/*
+ * LPC1768 8-bit Up/Down Counter Program
+ * 
+ * This program reads a key input and displays an 8-bit up/down counter
+ * on the LEDs of the LPC1768 microcontroller.
+ * 
+ * Key connections:
+ * - One button connected to P2.10 (UP button)
+ * - One button connected to P2.11 (DOWN button)
+ * 
+ * LED connections:
+ * - 8 LEDs connected to P1.16 through P1.23
+ */
+
+#include "LPC17xx.h"
+
+// Function prototypes
+void delay_ms(unsigned int ms);
+void init_gpio(void);
+void init_counter(void);
+void display_counter(uint8_t count);
+
+// Global variable to store counter value
+uint8_t counter = 0;
+
+int main(void) {
+    // Initialize GPIO pins for LEDs and buttons
+    init_gpio();
+    
+    // Initialize counter
+    init_counter();
+    
+    // Main program loop
+    while(1) {
+        // Check UP button (P2.10)
+        if (!(LPC_GPIO2->FIOPIN & (1 << 10))) {
+            // Button is pressed (active low)
+            counter++;
+            display_counter(counter);
+            
+            // Simple debounce delay
+            delay_ms(200);
+            
+            // Wait for button to be released
+            while(!(LPC_GPIO2->FIOPIN & (1 << 10)));
+        }
+        
+        // Check DOWN button (P2.11)
+        if (!(LPC_GPIO2->FIOPIN & (1 << 11))) {
+            // Button is pressed (active low)
+            counter--;
+            display_counter(counter);
+            
+            // Simple debounce delay
+            delay_ms(200);
+            
+            // Wait for button to be released
+            while(!(LPC_GPIO2->FIOPIN & (1 << 11)));
+        }
+    }
+}
+
+// Function to initialize GPIO pins
+void init_gpio(void) {
+    // Enable clock for GPIO ports
+    LPC_SC->PCONP |= (1 << 15);  // Power up GPIO
+    
+    // Set LED pins (P1.16 to P1.23) as outputs
+    LPC_GPIO1->FIODIR |= (0xFF << 16);
+    
+    // Set button pins (P2.10 and P2.11) as inputs with pull-up resistors
+    LPC_GPIO2->FIODIR &= ~(1 << 10);  // UP button
+    LPC_GPIO2->FIODIR &= ~(1 << 11);  // DOWN button
+    
+    // Enable pull-up resistors for button pins
+    LPC_PINCON->PINMODE4 &= ~(3 << 20);  // P2.10 pull-up
+    LPC_PINCON->PINMODE4 &= ~(3 << 22);  // P2.11 pull-up
+}
+
+// Function to initialize counter
+void init_counter(void) {
+    counter = 0;
+    display_counter(counter);
+}
+
+// Function to display counter value on LEDs
+void display_counter(uint8_t count) {
+    // Clear LEDs
+    LPC_GPIO1->FIOCLR = (0xFF << 16);
+    
+    // Set LEDs according to counter value
+    LPC_GPIO1->FIOSET = (count << 16);
+}
+
+// Delay function (approximate milliseconds)
+void delay_ms(unsigned int ms) {
+    unsigned int i, j;
+    for (i = 0; i < ms; i++)
+        for (j = 0; j < 4000; j++);  // Adjust this value based on your clock speed
+}

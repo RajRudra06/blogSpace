@@ -14,7 +14,6 @@ export default function IndexPage(){
             });
             const msg = await response.json();
             setPosts(msg);
-            console.log(msg);
         }
 
         fetchPosts(); 

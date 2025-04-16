@@ -1,7 +1,7 @@
 import connectDB from "./connectDB.js";
 import { pool } from "./connectDB.js";
 
-
+//file name changed
 
 // plsql func returns total number of post by author
 
@@ -40,7 +40,7 @@ export async function getPostCountByAuthor(author) {
     }
 }
 
-// function to get followed post
+// function to get following post 
 export async function getFollowedPosts(username) {
     const values = [username];
     try {
@@ -303,12 +303,6 @@ export async function getAllComments(post_id){
     }
 }
 
-async function getComment(){
-    const resp=await getAllComments(34);
-    console.log("monkey:",resp);
-}
-
-getComment();
 //function to create like table
 export async function createLikeTable(){
     try{

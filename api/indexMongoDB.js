@@ -43,13 +43,11 @@ app.post("/register",async(req,res)=>{
     const {username,password,lastName,firstName,email}=req.body
     try {
         const existingUser=await userModel.findOne({username})
-        console.log(existingUser)
         if(existingUser){
           return res.status(400).json({
             msg:"User already exists"
           })
         }
-        console.log("REnder Regostrtaion:: ")
         const userDoc=await userModel.create({
         username,
         password:bcrypt.hashSync(password,saltKey),
@@ -73,10 +71,7 @@ app.post("/login",async(req,res)=>{
   const {username,password}=req.body
   try {
       const existingUser=await userModel.findOne({username})
-      console.log(existingUser)
       const passOK=bcrypt.compareSync(password, existingUser.password);
-      console.log(bcrypt.compareSync(password, existingUser.password))
-      console.log(existingUser)
       if(existingUser!=null){
         if(passOK){
           jwt.sign({username,id:existingUser._id},jwtSecret,{},(err,token)=>{
@@ -121,7 +116,6 @@ app.get('/profile',(req,res)=>{
 
 app.get('/profile', (req, res) => {
   const {token} = req.cookies;
-  console.log(token)
   if (!token) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
@@ -188,7 +182,6 @@ app.post('/createpost',uploadMiddleware.single('file'),async (req,res)=>{
 
 app.get('/post/:id',async (req,res)=>{
   const {id}=req.params;
-  console.log(id);
   const postDoc=await postModel.findById(id);
   res.json(postDoc);
 
@@ -196,12 +189,10 @@ app.get('/post/:id',async (req,res)=>{
 
 app.get('/authorpost/:author',async(req,res)=>{
   const {author}=req.params;
-  console.log(author);
 
   try
   {
     const authorAllPost=await postModel.find({author:author})
-    console.log(authorAllPost);
     res.json(authorAllPost);
   }
   catch(err){
@@ -215,17 +206,12 @@ app.get('/authorpost/:author',async(req,res)=>{
 
 app.put("/updatepost", uploadMiddleware.single('file'), async(req,res)=>{
   res.json({msg:"mesage recieve"});
-  console.log("received body:: ");
-  console.log(req.body);
   const {_id,title,summary,content}=req.body;
-  console.log(req.body._id);
 
   try{
     const updateDoc=await postModel.updateOne({_id},{
     $set:{title,summary,content}});
 
-    console.log("Update odijbjhib::::")
-    console.log(updateDoc)
 }
   catch(err){
     console.log("DB error:  "+err)
@@ -234,29 +220,19 @@ app.put("/updatepost", uploadMiddleware.single('file'), async(req,res)=>{
 })  
 
 app.put("/updateprofile", uploadMiddleware.single('file'), async(req,res)=>{
-  console.log("received body:: ");
-  console.log(req.body);
   const {_id,username,firstName,lastName,email}=req.body;
-  console.log(req.body._id);
 
   try{
     
 
     const currDoc=await userModel.findById(_id);
-    console.log("currc od username:   ")
-    console.log(currDoc.username);
-    console.log(username);
     const updateAuthorName=await postModel.updateMany({author:currDoc.username},{
       $set:{author:username}
     })
 
-    console.log("authorn name ", updateAuthorName)
 
     const updateDoc=await userModel.updateOne({_id},{
       $set:{firstName,lastName,email,username}});
-
-    console.log("Update odijbjhib::::")
-    console.log(updateDoc)
 
     const newToken = jwt.sign({ id: _id, username, firstName, lastName, email }, jwtSecret);
 
@@ -274,15 +250,8 @@ app.put("/updateprofile", uploadMiddleware.single('file'), async(req,res)=>{
 })  
 
 app.post('/userprofile', async (req,res)=>{
-  console.log("what we gotid wise")
   const {id}=req.body;
-  console.log(id)
   const {_id, username,firstName,lastName,email,password}=await userModel.findById(id)
-
-  console.log("what we gotid wise after")
-    console.log(id)
-
-  console.log(_id,username,email,firstName,lastName);
 
   res.json({
     id:_id,

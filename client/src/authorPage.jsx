@@ -25,7 +25,6 @@ export default function AuthorPage(){
             });
             const msg = await response.json();
             setAuthorPosts(msg);
-            console.log("author all post", msg)
         }
         async function checkAuthorFollow(){
             if (!userInfo || !userInfo.username) return; 
@@ -34,14 +33,11 @@ export default function AuthorPage(){
                 method:'GET',
             })
             const msg=await response.json();
-            console.log("does follow:   ",msg,"userrrr:",userInfo.username)
             if(msg.value){
-                console.log("kmkmkm2",msg.value)
 
                 setIsFollowed(true);
             }
             else if(!msg.value){
-                console.log("kmkmkm",msg.value)
                 setIsFollowed(false);
             }
         }
@@ -53,7 +49,6 @@ export default function AuthorPage(){
 
             setPostCount(msg.postCount);
             setIsLoaded(true)
-            console.log("PLSQL reply:",msg)
         }
 
         fetchAuthorPost(); 
@@ -61,10 +56,8 @@ export default function AuthorPage(){
         getPostCountByAuthor();
         
     }, [userInfo]); 
-    console.log("userrrr:2",userInfo.username)
 
     async function followAuthor(){
-        console.log("done",userInfo.username," authro anme",author);
         try{
             const response=await fetch(`${API_URL}/followauthor`,{
                 method:'POST',
@@ -92,7 +85,6 @@ export default function AuthorPage(){
                 method:'DELETE',
             })
             const res=await response.json();
-            console.log("dele:de",res);
             if(res.value){
                     setIsFollowed(false);
                 }
@@ -102,7 +94,6 @@ export default function AuthorPage(){
             console.log("error unfollowing...", err);
         }
     }
-    console.log("inofofofoofofof:",userInfo)
     return(
         <>
         <Header/>
@@ -110,8 +101,6 @@ export default function AuthorPage(){
         <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
         
         {userInfo.username==null?null:(userInfo.username==author?null: (isFollowed==null?null:(isFollowed?<button onClick={unfollowAuthor}style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>📌 Following</button>:<button onClick={followAuthor} style={{cursor:"pointer", width:'130px', height:'50px',textAlign:'center',fontSize:'20px', margin:'0px', marginTop:'20px',marginBottom:'20px'}}>📌 Follow</button>)))}
-        
-        
         
         </div>
         

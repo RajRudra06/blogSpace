@@ -41,8 +41,6 @@ export default function Header(){
   
   }
 
-  console.log("in header ", userInfo)
-
   const username=userInfo?.username
 
   const headerStyle = {

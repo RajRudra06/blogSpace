@@ -18,7 +18,7 @@ import fs from 'fs';
 // imports for postgress
 
 import connectDB from './db_resources/connectDB.js';
-import { getLikeCount,getTopAuthors,getFollowedPosts,getPostCountByAuthor,insertIntoCommentsTable,getAllComments,checkIfLiked,deleteFromLikesTable,insertIntoLikesTable,getFollowingList,getFollowerList,getFollowingByUsername,getFollowersByUsername,unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/crud.js';
+import { getLikeCount,getTopAuthors,getFollowedPosts,getPostCountByAuthor,insertIntoCommentsTable,getAllComments,checkIfLiked,deleteFromLikesTable,insertIntoLikesTable,getFollowingList,getFollowerList,getFollowingByUsername,getFollowersByUsername,unfollowAuthor,checkIfFollow,getUserByUsername,addUniqueConstraint,insertIntoUsersTable,createUsersTable,createFollowsTable,getUserById, updateUserDetailsById, createPostsTable, insertIntoPostsTable, insertIntoFollowsTable,getAllPost, getPostByAuthor, getPostById, updatePostDetailsById, udpateAuthorNameChange,deletePostById} from './db_resources/db_CRUD.js';
 
 const uploadMiddleware=multer({dest:'uploads/'})
 
@@ -34,11 +34,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
-//createUsersTable();
-//createPostsTable()
-//createFollowsTable();
-//addUniqueConstraint();
-
 connectDB()
   
 // Postgress shifting is done 
@@ -52,7 +47,6 @@ app.post("/register",async(req,res)=>{
             msg:"User already exists"
           })
         }
-        console.log("REnder Regostrtaion:: ")
         const userDoc=await insertIntoUsersTable(username, bcrypt.hashSync(password,saltKey),firstName,lastName,email);
         res.json({
           msg:"Registered Succesfully"
@@ -70,10 +64,7 @@ app.post("/login",async(req,res)=>{
   const {username,password}=req.body
   try {
     const existingUser=await getUserByUsername(username);
-    console.log("Existing user:::::::::",existingUser)
       const passOK=bcrypt.compareSync(password, existingUser.password);
-      console.log(bcrypt.compareSync(password, existingUser.password))
-      console.log(existingUser)
       if(existingUser!=null){
         if(passOK){
           jwt.sign({username,id:existingUser.id},jwtSecret,{},(err,token)=>{
@@ -109,7 +100,6 @@ app.post("/login",async(req,res)=>{
 // Postgress shifting is done 
 app.get('/profile', (req, res) => {
   const {token} = req.cookies;
-  console.log(token)
   if (!token) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
@@ -168,13 +158,11 @@ app.post('/createpost',uploadMiddleware.single('file'),async (req,res)=>{
     value:postDoc
   })
 
-  console.log(req.body);
 })
 
 // Postgress shifting is done 
 app.get('/post/:id',async (req,res)=>{
   const {id}=req.params;
-  console.log(id);
   const postDoc=await getPostById(id);
   res.json(postDoc);
 
@@ -183,12 +171,10 @@ app.get('/post/:id',async (req,res)=>{
 // Postgress shifting is done 
 app.get('/authorpost/:author',async(req,res)=>{
   const {author}=req.params;
-  console.log(author);
 
   try
   {
     const authorAllPost=await getPostByAuthor(author)
-    console.log(authorAllPost);
     res.json(authorAllPost);
   }
   catch(err){
@@ -203,17 +189,14 @@ app.get('/authorpost/:author',async(req,res)=>{
 // follow a author 
 app.post('/followauthor',async(req,res)=>{
   const {username,author}=req.body;
-  console.log("Author:  ",author, "User: ",username);
 
   try{
     const followsDoc=await insertIntoFollowsTable(username, author);
-    console.log("flowo docnew code",followsDoc,"bw")
     if(followsDoc==1){
         res.json({
         msg:"Followed succesfully",
         value:followsDoc
       })
-      console.log(req.body);
     }
     else if(followsDoc=='23505'){
       res.json({
@@ -233,17 +216,14 @@ app.post('/followauthor',async(req,res)=>{
 // check if a user follows a author
 app.get('/checkFollow/:username/:author',async(req,res)=>{
   const {username,author}=req.params;
-  console.log("Author:  ",author, "User: ",username);
 
   try{
     const followsDoc=await checkIfFollow(username, author);
-    console.log("oes follow",followsDoc,"bw")
     if(followsDoc.rows[0].exists){
         res.json({
         msg:"user follows author",
         value:true
       })
-      console.log(req.body);
     }
     else if(!followsDoc.rows[0].exists){
       res.json({
@@ -262,11 +242,9 @@ app.get('/checkFollow/:username/:author',async(req,res)=>{
 // end point to unfollow the author
 app.delete('/unfollowauthor/:username/:author',async(req,res)=>{
   const {username,author}=req.params;
-  console.log("Author:  ",author, "User: ",username);
 
   try{
     const unfollowDoc=await unfollowAuthor(username, author);
-    console.log("oes follow",unfollowDoc,"bw")
     if(unfollowDoc==1){
         res.json({
         msg:"user unfollowed author",
@@ -290,45 +268,30 @@ app.delete('/unfollowauthor/:username/:author',async(req,res)=>{
 // Postgress shifting is done 
 app.put("/updatepost", uploadMiddleware.single('file'), async(req,res)=>{
   res.json({msg:"mesage recieve"});
-  console.log("received body:: ");
-  console.log(req.body);
   const {id,title,summary,content}=req.body;
-  console.log(req.body.id);
 
   try{
     const updateDoc=await updatePostDetailsById(id,title,summary,content)
-
-    console.log("Update odijbjhib::::")
-    console.log(updateDoc)
 }
   catch(err){
-    console.log("DB error:  "+err)
+    console.log("DB error updating posts  "+err)
   }
 
 })  
 
 // Postgress shifting is done 
 app.put("/updateprofile", uploadMiddleware.single('file'), async(req,res)=>{
-  console.log("Update *********************************************************************************************************")
-  console.log("received body:: from update");
-  console.log(req.body);
   const {id,username,firstName,lastName,email}=req.body;
-  console.log(req.body);
 
   try{
     
     //updating author name for all posts
     const currDoc=await getUserById(id);
-    console.log("currc od username:   ")
-    console.log(currDoc.username);
-    console.log(username);
+   
     const updateAuthorName=await udpateAuthorNameChange(currDoc.username,username)
-
-    console.log("authorn name ", updateAuthorName)
 
     const updateDoc=await updateUserDetailsById(id,username,firstName,lastName,email);
 
-    console.log("Update odijbjhib::::",updateDoc)
     const newToken = jwt.sign({ id: id, username, firstName, lastName, email }, jwtSecret);
 
     // Set the new token in the cookie
@@ -339,22 +302,15 @@ app.put("/updateprofile", uploadMiddleware.single('file'), async(req,res)=>{
     });
 }
   catch(err){
-    console.log("DB error:  "+err)
+    console.log("DB error while updating profile  "+err)
   }
 
 })  
 
 // Postgress shifting is done 
 app.post('/userprofile', async (req,res)=>{
-  console.log("what we gotid wise")
   const {id}=req.body;
-  console.log(id)
   const {_id, username,firstname,lastname,email,password}=await getUserById(id)
-  console.log(_id,username,firstname)
-  console.log("what we gotid wise after")
-    console.log(id)
-
-  console.log(id,username,email,firstname,lastname);
 
   res.json({
     id:_id,
@@ -401,7 +357,6 @@ app.get('/getfollowers/:username',async(req,res)=>{
 
   try {
     const getFollowersDoc=await getFollowersByUsername(username);
-    console.log("follwers DOC",getFollowersDoc);
     res.json({msg:getFollowersDoc})
   } 
   
@@ -417,7 +372,6 @@ app.get('/getfollowing/:username',async(req,res)=>{
 
   try {
     const getFollowersDoc=await getFollowingByUsername(username);
-    console.log("following DOC",getFollowersDoc);
     res.json({msg:getFollowersDoc})
   } 
   
@@ -433,7 +387,6 @@ app.get('/getfollowinglist/:username',async(req,res)=>{
   const followingList=[];
   try {
     const getFollowersDoc=await getFollowingList(username);
-    console.log("following list DOC",getFollowersDoc.rows);
     res.json({msg:getFollowersDoc.rows})
   } 
   
@@ -451,7 +404,6 @@ app.get('/getfollowerslist/:username',async(req,res)=>{
 
   try {
     const getFollowersDoc=await getFollowerList(username);
-    console.log("followers list DOC",getFollowersDoc.rows);
     res.json({msg:getFollowersDoc.rows})
   } 
   
@@ -522,7 +474,7 @@ app.get('/checkifliked/:post_id/:username',async (req,res)=>{
     }
   }
   catch(err){
-    console.log("Error unliking post",err);
+    console.log("Error checking like status of post",err);
     res.json({msg:err})
   }
 })
@@ -531,7 +483,6 @@ app.get("/comments/:post_id",async(req,res)=>{
     const {post_id}=req.params;
 
     const comments=await getAllComments(post_id)
-    console.log("POPPER LOG:",comments);
     try {
       if(comments.length>0){
         res.json({comments:comments,gotComments:true,number:comments.length})
@@ -541,7 +492,6 @@ app.get("/comments/:post_id",async(req,res)=>{
         res.json({comments:comments,gotComments:false,number:0})
   
       }
-      console.log("all comments:  ",comments.rows)
     } catch (error) {
       console.log("Error getting all comments",error);
       res.json({msg:error,gotComments:false})
@@ -571,7 +521,7 @@ app.post("/postcomments",async(req,res)=>{
     }
 
   } catch (error) {
-    console.log("Error:",error);
+    console.log("DB Error posting comment",error);
     res.json({msg:error,commentInserted:false})
   }
 
@@ -592,7 +542,6 @@ app.get('/postcount/:author', async (req, res) => {
 // get all post by a followed author nested
 app.get('/followedposts/:username', async (req, res) => {
   const { username } = req.params;
-  console.log("🔍 Fetching posts followed by:", username);
 
   try {
     const followedPosts = await getFollowedPosts(username);

@@ -26,10 +26,8 @@ export default function CommentSection({ post_id,PostContext,UserContext }) {
    
       const response = await fetch(`${API_URL}/comments/${post_id}`);
       const data = await response.json();
-      console.log("result got",data.comments, post_id);
 
       if(data.gotComments){
-        console.log("comments",data.comments);
         setIsLoading(false);
         setNoComments(false)
         setComments(data.comments);

@@ -6,7 +6,6 @@ import './App.css'
 const API_URL=import.meta.env.VITE_API_URL;
 
 export default function AuthorSinglePost({id,title,summary,cover,content,created_at,author}){
-  console.log(cover)
 
   function formatDateTime(created_at) {
     const date = new Date(created_at);

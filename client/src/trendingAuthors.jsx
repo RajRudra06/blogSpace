@@ -1,47 +1,3 @@
-// first GEN code
-
-// import { useState } from "react";
-// import { useEffect } from "react"
-// import Header from "./header";
-// import FilterTrendingAuthor from "./authorFilter";
-
-// const API_URL=import.meta.env.VITE_API_URL;
-
-// export default function TrendingAuthor(){
-//     const [trendingAuthors,setTrendingAuthors]=useState([]);
-
-//     useEffect(()=>{
-//         async function getTrendingAuthors(){
-//             const req=await fetch(`${API_URL}/topauthors`);
-//             const res=await req.json();
-//             setTrendingAuthors(res);
-//             console.log("trenindg ait",res);
-
-//         }
-
-//         getTrendingAuthors()
-//     })
-//     return (
-//         <>
-//           <Header />
-//           <div style={{ marginTop: "100px", display: "flex", flexDirection: "column", alignItems: "center", gap: "20px",}}>
-//             {trendingAuthors.length > 0 &&
-//               trendingAuthors.map((author, index) => (
-//                 <FilterTrendingAuthor
-//                   key={author.username}
-//                   index={index + 1} // pass the number
-//                   username={author.username || "unknown"}
-//                   post_count={author.post_count || 0}
-//                 />
-//               ))}
-//           </div>
-//         </>
-//       );
-      
-// }
-
-// improved UI
-
 import { useState } from "react";
 import { useEffect } from "react"
 import Header from "./header";
@@ -56,7 +12,6 @@ export default function TrendingAuthor(){
             const req=await fetch(`${API_URL}/topauthors`);
             const res=await req.json();
             setTrendingAuthors(res);
-            console.log("trenindg ait",res);
         }
         getTrendingAuthors()
     })

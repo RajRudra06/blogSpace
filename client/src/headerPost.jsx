@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom"
-import '/Users/rudrarajpurohit/Desktop/Blog Space/client/src/App.css'
+import './App.css'
 import { useContext, useEffect, useState } from "react"
 import { UserContext } from "./UserContext.jsx"
 import { IsInContext } from "./LoginContext.jsx"
