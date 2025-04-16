@@ -25,7 +25,7 @@ const uploadMiddleware=multer({dest:'uploads/'})
 const saltKey=bcrypt.genSaltSync(10);
 const jwtSecret='jhasbvdjhfbjhsbdkfnksad872y3rkjl'
 
-app.use(cors({credentials:true, origin:['http://localhost:5173',''],methods:['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],allowedHeaders:['Content-Type','Authorization']}));
+app.use(cors({credentials:true, origin:['http://localhost:5173','https://blog-space-alpha.vercel.app/'],methods:['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],allowedHeaders:['Content-Type','Authorization']}));
 app.use(json());
 // makes the cookie available in req.cookies.token which will be send by the POST/GET request
 app.use(cookieParser())
